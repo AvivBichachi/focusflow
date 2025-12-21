@@ -1,4 +1,6 @@
 import { getCurrentFocus, startFocus as startFocusService, stopFocus as stopFocusService } from "../services/focus.service.js";
+import { findTaskById } from "../services/tasks.service.js";
+
 
 export function getFocus(req, res) {
   const focus = getCurrentFocus();
@@ -11,6 +13,13 @@ export function startFocus(req, res) {
   if (!taskId || typeof taskId !== "string") {
     return res.status(400).json({ error: "taskId is required and must be a string" });
   }
+
+  const task = findTaskById(taskId);
+  
+  if (!task) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
 
   const result = startFocusService(taskId);
 
