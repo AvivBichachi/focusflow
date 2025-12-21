@@ -1,5 +1,5 @@
 import express from "express";
-import { createTask, listTasks } from "../controllers/tasks.controller.js";
+import { createTask, listTasks, updateTask, completeTask, deleteTask } from "../controllers/tasks.controller.js";
 
 const router = express.Router();
 
@@ -8,5 +8,15 @@ router.post("/", createTask);
 
 // GET /api/tasks
 router.get("/", listTasks);
+
+// PATCH /api/tasks/:id
+router.patch("/:id", updateTask);
+
+// POST /api/tasks/:id/complete
+router.post("/:id/complete", completeTask);
+
+// DELETE /api/tasks/:id
+router.delete("/:id", deleteTask);
+
 
 export default router;
