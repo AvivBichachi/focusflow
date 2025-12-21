@@ -23,3 +23,15 @@ export function listTasks(req, res) {
   const tasks = listTasksService();
   res.status(200).json({ items: tasks });
 }
+
+export function updateTask(req, res) {
+  res.status(501).json({ message: "Update task - not implemented yet" });
+}
+
+export function completeTask(req, res) {
+  res.status(501).json({ message: "Complete task - not implemented yet" });
+}
+
+export function deleteTask(req, res) {
+  res.status(501).json({ message: "Delete task - not implemented yet" });
+}
