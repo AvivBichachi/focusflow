@@ -5,8 +5,12 @@ const {
   PGPORT = "5432",
   PGDATABASE = "focusflow",
   PGUSER = "focusflow",
-  PGPASSWORD = "admin",
+  PGPASSWORD,
 } = process.env;
+
+if (!PGPASSWORD) {
+  throw new Error("Missing PGPASSWORD for PostgreSQL connection");
+}
 
 export const pool = new Pool({
   host: PGHOST,

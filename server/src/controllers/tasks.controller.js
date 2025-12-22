@@ -6,7 +6,7 @@ import {
   deleteTaskById,
 } from "../services/tasks.service.js";
 
-export function createTask(req, res) {
+export async function createTask(req, res) {
   const { title, description, priority, dueDate } = req.body;
 
   if (!title || typeof title !== "string") {
@@ -15,20 +15,32 @@ export function createTask(req, res) {
     });
   }
 
-  const task = createTaskService({
-    title,
-    description,
-    priority,
-    dueDate,
-  });
+  try {
+    const task = await createTaskService({
+      title,
+      description,
+      priority,
+      dueDate,
+    });
 
-  res.status(201).json(task);
+    res.status(201).json(task);
+  } catch (err) {
+    console.error("Failed to create task", err);
+    res.status(500).json({ error: "Failed to create task" });
+  }
 }
 
-export function listTasks(req, res) {
-  const tasks = listTasksService();
-  res.status(200).json({ items: tasks });
+
+export async function listTasks(req, res) {
+  try {
+    const tasks = await listTasksService();
+    res.status(200).json({ items: tasks });
+  } catch (err) {
+    console.error("Failed to list tasks", err);
+    res.status(500).json({ error: "Failed to list tasks" });
+  }
 }
+
 
 export function updateTask(req, res) {
   const { id } = req.params;
