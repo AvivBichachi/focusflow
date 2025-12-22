@@ -74,14 +74,15 @@ export async function completeTask(req, res) {
 
 
 
-export function deleteTask(req, res) {
+export async function deleteTask(req, res) {
   const { id } = req.params;
 
-  const deleted = deleteTaskById(id);
+  const deleted = await deleteTaskById(id);
   if (!deleted) {
     return res.status(404).json({ error: "Task not found" });
   }
 
   res.status(204).send();
 }
+
 

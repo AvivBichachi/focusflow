@@ -179,10 +179,15 @@ export async function completeTaskById(id) {
 }
 
 
-export function deleteTaskById(id) {
-  const index = tasks.findIndex((t) => t.id === id);
-  if (index === -1) return false;
+export async function deleteTaskById(id) {
+  const result = await pool.query(
+    `
+    DELETE FROM tasks
+    WHERE id = $1
+    `,
+    [id]
+  );
 
-  tasks.splice(index, 1);
-  return true;
+  return result.rowCount > 0;
 }
+
