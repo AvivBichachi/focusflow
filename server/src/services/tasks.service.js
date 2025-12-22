@@ -1,4 +1,6 @@
 import { randomUUID } from "crypto";
+import { pool } from "../db/pool.js";
+
 
 const tasks = [];
 
