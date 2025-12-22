@@ -99,27 +99,66 @@ export default function App() {
   }
 
   async function deleteTask(taskId) {
-  setError("");
-  try {
-    const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
-      method: "DELETE",
-    });
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: "DELETE",
+      });
 
-    if (!res.ok) {
-      const j = await res.json().catch(() => null);
-      throw new Error(j?.error || `Failed to delete task (${res.status})`);
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to delete task (${res.status})`);
+      }
+
+      // If the deleted task is currently focused, clear focus in UI
+      if (focus.taskId === taskId) {
+        setFocus({ taskId: null, focusedAt: null });
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to delete task");
     }
-
-    // If the deleted task is currently focused, clear focus in UI
-    if (focus.taskId === taskId) {
-      setFocus({ taskId: null, focusedAt: null });
-    }
-
-    await fetchTasks();
-  } catch (e) {
-    setError(e.message || "Failed to delete task");
   }
-}
+  async function updateTaskStatus(taskId, status) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to update task (${res.status})`);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to update task");
+    }
+  }
+
+
+  async function completeTask(taskId) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}/complete`, {
+        method: "POST",
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to complete task (${res.status})`);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to complete task");
+    }
+  }
+
 
 
 
@@ -174,6 +213,8 @@ export default function App() {
         focusTaskId={focus.taskId}
         onStartFocus={startFocus}
         onDelete={deleteTask}
+        onComplete={completeTask}
+        onUpdateStatus={updateTaskStatus}
       />
 
 
