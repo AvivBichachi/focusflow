@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import FocusPanel from "./components/FocusPanel.jsx";
+import TaskList from "./components/TaskList.jsx";
+
 
 const API_BASE = "/api";
 
@@ -95,6 +98,69 @@ export default function App() {
     }
   }
 
+  async function deleteTask(taskId) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to delete task (${res.status})`);
+      }
+
+      // If the deleted task is currently focused, clear focus in UI
+      if (focus.taskId === taskId) {
+        setFocus({ taskId: null, focusedAt: null });
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to delete task");
+    }
+  }
+  async function updateTaskStatus(taskId, status) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to update task (${res.status})`);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to update task");
+    }
+  }
+
+
+  async function completeTask(taskId) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}/complete`, {
+        method: "POST",
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to complete task (${res.status})`);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to complete task");
+    }
+  }
+
+
+
 
   useEffect(() => {
     fetchTasks();
@@ -128,28 +194,8 @@ export default function App() {
         </div>
       ) : null}
 
-      <div style={{ marginTop: 24, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-        <h3 style={{ marginTop: 0 }}>Focus</h3>
+      <FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />
 
-        {focus.taskId ? (
-          <>
-            <div style={{ marginBottom: 8 }}>
-              Currently focusing on task: 
-              <strong>
-                {tasks.find((t) => t.id === focus.taskId)?.title || "Unknown task"}
-              </strong>
-            </div>
-            <button
-              onClick={stopFocus}
-              style={{ padding: "8px 12px", borderRadius: 8, cursor: "pointer" }}
-            >
-              Stop focus
-            </button>
-          </>
-        ) : (
-          <div>No active focus</div>
-        )}
-      </div>
 
 
       <div style={{ marginTop: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -162,23 +208,16 @@ export default function App() {
         </button>
       </div>
 
-      <ul style={{ marginTop: 12, paddingLeft: 18 }}>
-        {tasks.length === 0 ? <li>No tasks yet</li> : null}
-        {tasks.map((t) => (
-          <li key={t.id} style={{ marginBottom: 8 }}>
-            <span style={{ fontWeight: 600 }}>{t.title}</span>{" "}
-            <span style={{ opacity: 0.7 }}>({t.status})</span>
+      <TaskList
+        tasks={tasks}
+        focusTaskId={focus.taskId}
+        onStartFocus={startFocus}
+        onDelete={deleteTask}
+        onComplete={completeTask}
+        onUpdateStatus={updateTaskStatus}
+      />
 
-            <button
-              onClick={() => startFocus(t.id)}
-              disabled={!!focus.taskId}
-              style={{ marginLeft: 12, padding: "4px 8px", cursor: "pointer" }}
-            >
-              Focus
-            </button>
-          </li>
-        ))}
-      </ul>
+
     </div>
   );
 }
