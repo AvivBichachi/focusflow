@@ -1,7 +1,10 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import tasksRoutes from "./src/routes/tasks.routes.js";
 import focusRoutes from "./src/routes/focus.routes.js";
+
+
 
 
 const app = express();

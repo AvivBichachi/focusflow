@@ -6,7 +6,7 @@ import {
   deleteTaskById,
 } from "../services/tasks.service.js";
 
-export function createTask(req, res) {
+export async function createTask(req, res) {
   const { title, description, priority, dueDate } = req.body;
 
   if (!title || typeof title !== "string") {
@@ -15,22 +15,34 @@ export function createTask(req, res) {
     });
   }
 
-  const task = createTaskService({
-    title,
-    description,
-    priority,
-    dueDate,
-  });
+  try {
+    const task = await createTaskService({
+      title,
+      description,
+      priority,
+      dueDate,
+    });
 
-  res.status(201).json(task);
+    res.status(201).json(task);
+  } catch (err) {
+    console.error("Failed to create task", err);
+    res.status(500).json({ error: "Failed to create task" });
+  }
 }
 
-export function listTasks(req, res) {
-  const tasks = listTasksService();
-  res.status(200).json({ items: tasks });
+
+export async function listTasks(req, res) {
+  try {
+    const tasks = await listTasksService();
+    res.status(200).json({ items: tasks });
+  } catch (err) {
+    console.error("Failed to list tasks", err);
+    res.status(500).json({ error: "Failed to list tasks" });
+  }
 }
 
-export function updateTask(req, res) {
+
+export async function updateTask(req, res) {
   const { id } = req.params;
   const updates = req.body;
 
@@ -40,7 +52,7 @@ export function updateTask(req, res) {
     });
   }
 
-  const updatedTask = updateTaskById(id, updates);
+  const updatedTask = await updateTaskById(id, updates);
   if (!updatedTask) {
     return res.status(404).json({ error: "Task not found" });
   }
@@ -49,10 +61,10 @@ export function updateTask(req, res) {
 }
 
 
-export function completeTask(req, res) {
+export async function completeTask(req, res) {
   const { id } = req.params;
 
-  const task = completeTaskById(id);
+  const task = await completeTaskById(id);
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
@@ -61,14 +73,16 @@ export function completeTask(req, res) {
 }
 
 
-export function deleteTask(req, res) {
+
+export async function deleteTask(req, res) {
   const { id } = req.params;
 
-  const deleted = deleteTaskById(id);
+  const deleted = await deleteTaskById(id);
   if (!deleted) {
     return res.status(404).json({ error: "Task not found" });
   }
 
   res.status(204).send();
 }
+
 
