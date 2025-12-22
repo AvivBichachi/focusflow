@@ -152,14 +152,32 @@ export async function updateTaskById(id, updates) {
 }
 
 
-export function completeTaskById(id) {
-  const task = findTaskById(id);
-  if (!task) return null;
+export async function completeTaskById(id) {
+  const { rows } = await pool.query(
+    `
+    UPDATE tasks
+    SET status = 'COMPLETED', updated_at = now()
+    WHERE id = $1
+    RETURNING id, title, description, status, priority, due_date, created_at, updated_at
+    `,
+    [id]
+  );
 
-  task.status = "COMPLETED";
-  task.updatedAt = new Date().toISOString();
-  return task;
+  const t = rows[0];
+  if (!t) return null;
+
+  return {
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    status: t.status,
+    priority: t.priority,
+    dueDate: t.due_date ? new Date(t.due_date).toISOString() : null,
+    createdAt: new Date(t.created_at).toISOString(),
+    updatedAt: new Date(t.updated_at).toISOString(),
+  };
 }
+
 
 export function deleteTaskById(id) {
   const index = tasks.findIndex((t) => t.id === id);

@@ -52,7 +52,7 @@ export async function updateTask(req, res) {
     });
   }
 
-  const updatedTask = updateTaskById(id, updates);
+  const updatedTask = await updateTaskById(id, updates);
   if (!updatedTask) {
     return res.status(404).json({ error: "Task not found" });
   }
@@ -61,16 +61,17 @@ export async function updateTask(req, res) {
 }
 
 
-export function completeTask(req, res) {
+export async function completeTask(req, res) {
   const { id } = req.params;
 
-  const task = completeTaskById(id);
+  const task = await completeTaskById(id);
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
 
   res.status(200).json(task);
 }
+
 
 
 export function deleteTask(req, res) {
