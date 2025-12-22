@@ -98,6 +98,30 @@ export default function App() {
     }
   }
 
+  async function deleteTask(taskId) {
+  setError("");
+  try {
+    const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const j = await res.json().catch(() => null);
+      throw new Error(j?.error || `Failed to delete task (${res.status})`);
+    }
+
+    // If the deleted task is currently focused, clear focus in UI
+    if (focus.taskId === taskId) {
+      setFocus({ taskId: null, focusedAt: null });
+    }
+
+    await fetchTasks();
+  } catch (e) {
+    setError(e.message || "Failed to delete task");
+  }
+}
+
+
 
   useEffect(() => {
     fetchTasks();
@@ -145,7 +169,13 @@ export default function App() {
         </button>
       </div>
 
-      <TaskList tasks={tasks} focusTaskId={focus.taskId} onStartFocus={startFocus} />
+      <TaskList
+        tasks={tasks}
+        focusTaskId={focus.taskId}
+        onStartFocus={startFocus}
+        onDelete={deleteTask}
+      />
+
 
     </div>
   );

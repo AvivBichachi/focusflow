@@ -1,4 +1,4 @@
-export default function TaskItem({ task, focusTaskId, onStartFocus }) {
+export default function TaskItem({ task, focusTaskId, onStartFocus, onDelete }) {
   return (
     <li style={{ marginBottom: 10 }}>
       <div>
@@ -22,6 +22,12 @@ export default function TaskItem({ task, focusTaskId, onStartFocus }) {
       >
         Focus
       </button>
+      <button
+        onClick={() => onDelete(task.id)}
+        style={{ padding: "4px 8px", cursor: "pointer" }}
+      >
+        Delete
+      </button>  
     </li>
   );
 }
