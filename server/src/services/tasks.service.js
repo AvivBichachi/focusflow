@@ -63,23 +63,94 @@ export async function listTasks() {
 }
 
 
-export function findTaskById(id) {
-  return tasks.find((t) => t.id === id);
+export async function findTaskById(id) {
+  const { rows } = await pool.query(
+    `
+    SELECT
+      id,
+      title,
+      description,
+      status,
+      priority,
+      due_date,
+      created_at,
+      updated_at
+    FROM tasks
+    WHERE id = $1
+    LIMIT 1
+    `,
+    [id]
+  );
+
+  const t = rows[0];
+  if (!t) return null;
+
+  return {
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    status: t.status,
+    priority: t.priority,
+    dueDate: t.due_date ? new Date(t.due_date).toISOString() : null,
+    createdAt: new Date(t.created_at).toISOString(),
+    updatedAt: new Date(t.updated_at).toISOString(),
+  };
 }
 
-export function updateTaskById(id, updates) {
-  const task = findTaskById(id);
-  if (!task) return null;
 
-  if (updates.title !== undefined) task.title = updates.title;
-  if (updates.description !== undefined) task.description = updates.description;
-  if (updates.priority !== undefined) task.priority = updates.priority;
-  if (updates.dueDate !== undefined) task.dueDate = updates.dueDate;
-  if (updates.status !== undefined) task.status = updates.status;
+export async function updateTaskById(id, updates) {
+  const fields = [];
+  const values = [];
+  let idx = 1;
 
-  task.updatedAt = new Date().toISOString();
-  return task;
+  if (updates.title !== undefined) {
+    fields.push(`title = $${idx++}`);
+    values.push(updates.title);
+  }
+  if (updates.description !== undefined) {
+    fields.push(`description = $${idx++}`);
+    values.push(updates.description);
+  }
+  if (updates.priority !== undefined) {
+    fields.push(`priority = $${idx++}`);
+    values.push(updates.priority);
+  }
+  if (updates.dueDate !== undefined) {
+    fields.push(`due_date = $${idx++}`);
+    values.push(updates.dueDate);
+  }
+  if (updates.status !== undefined) {
+    fields.push(`status = $${idx++}`);
+    values.push(updates.status);
+  }
+
+  if (fields.length === 0) return null;
+
+  const { rows } = await pool.query(
+    `
+    UPDATE tasks
+    SET ${fields.join(", ")}, updated_at = now()
+    WHERE id = $${idx}
+    RETURNING id, title, description, status, priority, due_date, created_at, updated_at
+    `,
+    [...values, id]
+  );
+
+  const t = rows[0];
+  if (!t) return null;
+
+  return {
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    status: t.status,
+    priority: t.priority,
+    dueDate: t.due_date ? new Date(t.due_date).toISOString() : null,
+    createdAt: new Date(t.created_at).toISOString(),
+    updatedAt: new Date(t.updated_at).toISOString(),
+  };
 }
+
 
 export function completeTaskById(id) {
   const task = findTaskById(id);

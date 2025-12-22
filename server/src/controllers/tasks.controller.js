@@ -42,7 +42,7 @@ export async function listTasks(req, res) {
 }
 
 
-export function updateTask(req, res) {
+export async function updateTask(req, res) {
   const { id } = req.params;
   const updates = req.body;
 
