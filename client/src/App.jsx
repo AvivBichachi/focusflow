@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import FocusPanel from "./components/FocusPanel.jsx";
 import TaskList from "./components/TaskList.jsx";
+import FocusHistory from "./components/FocusHistory";
+import DailyFocusStats from "./components/DailyFocusStats";
+
 
 
 const API_BASE = "/api";
@@ -216,6 +219,9 @@ export default function App() {
         onComplete={completeTask}
         onUpdateStatus={updateTaskStatus}
       />
+      <DailyFocusStats />
+      <FocusHistory />
+
 
 
     </div>
