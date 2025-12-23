@@ -4,6 +4,8 @@ import {
   stopFocus as stopFocusService,
 } from "../services/focus.service.js";
 import { findTaskById } from "../services/tasks.service.js";
+import { getDailyFocusStats as getDailyStatsService, listFocusSessions } from "../services/focusSessions.service.js";
+
 
 export async function getFocus(req, res) {
   const focus = await getCurrentFocus();
@@ -57,3 +59,38 @@ export async function stopFocus(req, res) {
     res.status(500).json({ error: "Failed to stop focus" });
   }
 }
+
+export async function getFocusSessions(req, res) {
+  try {
+    const { limit, taskId, from, to } = req.query;
+
+    const items = await listFocusSessions({
+      limit,
+      taskId,
+      from,
+      to,
+    });
+
+    res.status(200).json({ items });
+  } catch (err) {
+    const status = err.status || 500;
+    const message = err.status ? err.message : "Failed to list focus sessions";
+    console.error("Failed to list focus sessions", err);
+    res.status(status).json({ error: message });
+  }
+}
+
+
+export async function getDailyFocusStats(req, res) {
+  try {
+    const { days, tz } = req.query;
+
+    const items = await getDailyStatsService({ days, tz });
+
+    res.status(200).json({ items });
+  } catch (err) {
+    console.error("Failed to get daily focus stats", err);
+    res.status(500).json({ error: "Failed to get daily focus stats" });
+  }
+}
+
