@@ -83,9 +83,9 @@ export async function getFocusSessions(req, res) {
 
 export async function getDailyFocusStats(req, res) {
   try {
-    const { days } = req.query;
+    const { days, tz } = req.query;
 
-    const items = await getDailyStatsService({ days });
+    const items = await getDailyStatsService({ days, tz });
 
     res.status(200).json({ items });
   } catch (err) {

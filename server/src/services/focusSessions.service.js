@@ -78,24 +78,32 @@ export async function listFocusSessions({ limit, taskId, from, to }) {
     }));
 }
 
-export async function getDailyFocusStats({ days }) {
+export async function getDailyFocusStats({ days, tz }) {
     const safeDays = Number.isInteger(Number(days))
         ? Math.min(Math.max(Number(days), 1), 30)
         : 7;
 
+    const safeTz = typeof tz === "string" && tz.trim() ? tz.trim() : "UTC";
+    if (safeTz.length > 64) {
+        const err = new Error("Invalid 'tz' value");
+        err.status = 400;
+        throw err;
+    }
+
     const { rows } = await pool.query(
         `
     SELECT
-      DATE(started_at) AS day,
-      SUM(EXTRACT(EPOCH FROM (ended_at - started_at)))::int AS total_seconds
-    FROM focus_sessions
-    WHERE
-      ended_at IS NOT NULL
-      AND started_at >= (now() - ($1 || ' days')::interval)
-    GROUP BY DATE(started_at)
-    ORDER BY day DESC
+  to_char(timezone($2, started_at), 'YYYY-MM-DD') AS day,
+  SUM(EXTRACT(EPOCH FROM (ended_at - started_at)))::int AS total_seconds
+FROM focus_sessions
+WHERE
+  ended_at IS NOT NULL
+  AND started_at >= (now() - ($1 || ' days')::interval)
+GROUP BY to_char(timezone($2, started_at), 'YYYY-MM-DD')
+ORDER BY day DESC
+
     `,
-        [safeDays]
+        [safeDays, safeTz]
     );
 
     return rows.map((r) => ({
@@ -103,3 +111,4 @@ export async function getDailyFocusStats({ days }) {
         totalSeconds: r.total_seconds ?? 0,
     }));
 }
+
