@@ -57,3 +57,13 @@ export async function stopFocus(req, res) {
     res.status(500).json({ error: "Failed to stop focus" });
   }
 }
+
+export async function getFocusSessions(req, res) {
+  // TODO: implement in service
+  res.status(501).json({ error: "Not implemented" });
+}
+
+export async function getDailyFocusStats(req, res) {
+  // TODO: implement in service
+  res.status(501).json({ error: "Not implemented" });
+}
