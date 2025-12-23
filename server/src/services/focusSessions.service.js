@@ -72,3 +72,29 @@ export async function listFocusSessions({ limit, taskId, from, to }) {
     durationSeconds: r.ended_at ? r.duration_seconds : null,
   }));
 }
+
+export async function getDailyFocusStats({ days }) {
+  const safeDays = Number.isInteger(Number(days))
+    ? Math.min(Math.max(Number(days), 1), 30)
+    : 7;
+
+  const { rows } = await pool.query(
+    `
+    SELECT
+      DATE(started_at) AS day,
+      SUM(EXTRACT(EPOCH FROM (ended_at - started_at)))::int AS total_seconds
+    FROM focus_sessions
+    WHERE
+      ended_at IS NOT NULL
+      AND started_at >= (now() - ($1 || ' days')::interval)
+    GROUP BY DATE(started_at)
+    ORDER BY day DESC
+    `,
+    [safeDays]
+  );
+
+  return rows.map((r) => ({
+    date: r.day,
+    totalSeconds: r.total_seconds ?? 0,
+  }));
+}

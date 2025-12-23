@@ -4,7 +4,7 @@ import {
   stopFocus as stopFocusService,
 } from "../services/focus.service.js";
 import { findTaskById } from "../services/tasks.service.js";
-import { listFocusSessions } from "../services/focusSessions.service.js";
+import { getDailyFocusStats as getDailyStatsService, listFocusSessions } from "../services/focusSessions.service.js";
 
 
 export async function getFocus(req, res) {
@@ -82,6 +82,15 @@ export async function getFocusSessions(req, res) {
 
 
 export async function getDailyFocusStats(req, res) {
-  // TODO: implement in service
-  res.status(501).json({ error: "Not implemented" });
+  try {
+    const { days } = req.query;
+
+    const items = await getDailyStatsService({ days });
+
+    res.status(200).json({ items });
+  } catch (err) {
+    console.error("Failed to get daily focus stats", err);
+    res.status(500).json({ error: "Failed to get daily focus stats" });
+  }
 }
+
