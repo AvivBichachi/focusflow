@@ -6,6 +6,7 @@ import DailyFocusStats from "./components/DailyFocusStats";
 import Header from "./components/Header";
 import DashboardLayout from "./components/DashboardLayout";
 import TaskForm from "./components/TaskForm.jsx";
+import TaskDetailsModal from "./components/TaskDetailsModal.jsx";
 
 
 
@@ -15,11 +16,15 @@ const API_BASE = "/api";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [focus, setFocus] = useState({ taskId: null, focusedAt: null });
   const [analyticsRefreshToken, setAnalyticsRefreshToken] = useState(0);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+
+
+  const selectedTask = tasks.find((t) => t.id === selectedTaskId) || null;
+
 
 
   function bumpAnalytics() {
@@ -40,30 +45,30 @@ export default function App() {
   }
 
   async function createTask(payload) {
-  setLoading(true);
-  setError("");
+    setLoading(true);
+    setError("");
 
-  try {
-    const res = await fetch(`${API_BASE}/tasks`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch(`${API_BASE}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!res.ok) {
-      const maybeJson = await res.json().catch(() => null);
-      const msg = maybeJson?.error ? `${maybeJson.error}` : `Failed to create task (${res.status})`;
-      throw new Error(msg);
+      if (!res.ok) {
+        const maybeJson = await res.json().catch(() => null);
+        const msg = maybeJson?.error ? `${maybeJson.error}` : `Failed to create task (${res.status})`;
+        throw new Error(msg);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to create task");
+      throw e; // חשוב כדי שה-TaskForm לא ינקה שדות במקרה כשל
+    } finally {
+      setLoading(false);
     }
-
-    await fetchTasks();
-  } catch (e) {
-    setError(e.message || "Failed to create task");
-    throw e; // חשוב כדי שה-TaskForm לא ינקה שדות במקרה כשל
-  } finally {
-    setLoading(false);
   }
-}
 
 
   async function fetchFocus() {
@@ -220,6 +225,7 @@ export default function App() {
               onDelete={deleteTask}
               onComplete={completeTask}
               onUpdateStatus={updateTaskStatus}
+              onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
             />
           </>
         }
@@ -230,6 +236,21 @@ export default function App() {
           </>
         }
       />
+      <TaskDetailsModal
+        open={!!selectedTaskId}
+        task={selectedTask}
+        onClose={() => setSelectedTaskId(null)}
+        onComplete={async (taskId) => {
+          await completeTask(taskId);
+          setSelectedTaskId(null);
+        }}
+        onDelete={async (taskId) => {
+          await deleteTask(taskId);
+          setSelectedTaskId(null);
+        }}
+      />
+
+
     </div>
   );
 }
