@@ -5,6 +5,8 @@ import FocusHistory from "./components/FocusHistory";
 import DailyFocusStats from "./components/DailyFocusStats";
 import Header from "./components/Header";
 import DashboardLayout from "./components/DashboardLayout";
+import TaskForm from "./components/TaskForm.jsx";
+
 
 
 
@@ -37,34 +39,32 @@ export default function App() {
     }
   }
 
-  async function createTask(e) {
-    e.preventDefault();
-    const trimmed = title.trim();
-    if (!trimmed) return;
+  async function createTask(payload) {
+  setLoading(true);
+  setError("");
 
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch(`${API_BASE}/tasks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: trimmed }),
-      });
+  try {
+    const res = await fetch(`${API_BASE}/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-      if (!res.ok) {
-        const maybeJson = await res.json().catch(() => null);
-        const msg = maybeJson?.error ? `${maybeJson.error}` : `Failed to create task (${res.status})`;
-        throw new Error(msg);
-      }
-
-      setTitle("");
-      await fetchTasks();
-    } catch (e) {
-      setError(e.message || "Failed to create task");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      const maybeJson = await res.json().catch(() => null);
+      const msg = maybeJson?.error ? `${maybeJson.error}` : `Failed to create task (${res.status})`;
+      throw new Error(msg);
     }
+
+    await fetchTasks();
+  } catch (e) {
+    setError(e.message || "Failed to create task");
+    throw e; // חשוב כדי שה-TaskForm לא ינקה שדות במקרה כשל
+  } finally {
+    setLoading(false);
   }
+}
+
 
   async function fetchFocus() {
     try {
@@ -191,21 +191,8 @@ export default function App() {
             <h1 style={{ marginBottom: 8 }}>FocusFlow</h1>
             <p style={{ marginTop: 0, opacity: 0.8 }}>Minimal UI (Tasks)</p>
 
-            <form onSubmit={createTask} style={{ display: "flex", gap: 8, marginTop: 16 }}>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="New task title..."
-                style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
-              />
-              <button
-                type="submit"
-                disabled={loading || !title.trim()}
-                style={{ padding: "10px 14px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-              >
-                {loading ? "Adding..." : "Add"}
-              </button>
-            </form>
+            <TaskForm loading={loading} onCreate={createTask} />
+
 
             {error ? (
               <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
