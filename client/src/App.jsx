@@ -188,8 +188,7 @@ export default function App() {
       <DashboardLayout
         left={
           <>
-            <h1 style={{ marginBottom: 8 }}>FocusFlow</h1>
-            <p style={{ marginTop: 0, opacity: 0.8 }}>Minimal UI (Tasks)</p>
+            <h1 style={{ marginBottom: 8 }}>Add Your Task</h1>
 
             <TaskForm loading={loading} onCreate={createTask} />
 
