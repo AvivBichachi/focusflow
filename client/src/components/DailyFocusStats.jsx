@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { formatHms } from "../utils/formatTime.js";
+
 
 const API_BASE = "/api";
-
-function formatMinutes(totalSeconds) {
-  const s = Math.max(0, Number(totalSeconds || 0));
-  const minutes = Math.round(s / 60);
-  return `${minutes} min`;
-}
 
 export default function DailyFocusStats({ refreshToken }) {
   const [days, setDays] = useState(7);
@@ -82,7 +78,7 @@ export default function DailyFocusStats({ refreshToken }) {
           {items.map((d) => (
             <li key={d.date} style={{ marginBottom: 8 }}>
               <span style={{ fontWeight: 600 }}>{d.date}</span>{" "}
-              <span style={{ opacity: 0.8 }}>— {formatMinutes(d.totalSeconds)}</span>
+              <span style={{ opacity: 0.8 }}>— {formatHms(d.totalSeconds)}</span>
             </li>
           ))}
         </ul>

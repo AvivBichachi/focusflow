@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
+import { formatHms } from "../utils/formatTime.js";
+
 
 const API_BASE = "/api";
 
-function formatDuration(seconds) {
-  if (seconds === null || seconds === undefined) return "—";
-  const s = Math.max(0, Number(seconds));
-  const mm = String(Math.floor(s / 60)).padStart(2, "0");
-  const ss = String(Math.floor(s % 60)).padStart(2, "0");
-  return `${mm}:${ss}`;
-}
 
 function formatLocal(isoOrNull) {
   if (!isoOrNull) return "—";
@@ -64,7 +59,7 @@ export default function FocusHistory({ refreshToken }) {
               <li key={s.id} style={{ marginBottom: 10 }}>
                 <div style={{ fontWeight: 600 }}>{s.taskTitle ?? "Unknown task"}</div>
                 <div style={{ fontSize: 12, opacity: 0.8 }}>
-                  Duration: {formatDuration(s.durationSeconds)}{" | "}
+                  Duration: {formatHms(s.durationSeconds)}{" | "}
                   Start: {formatLocal(s.startedAt)}{" | "}
                   End: {formatLocal(s.endedAt)}
                 </div>
