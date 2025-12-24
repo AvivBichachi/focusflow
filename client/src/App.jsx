@@ -3,6 +3,9 @@ import FocusPanel from "./components/FocusPanel.jsx";
 import TaskList from "./components/TaskList.jsx";
 import FocusHistory from "./components/FocusHistory";
 import DailyFocusStats from "./components/DailyFocusStats";
+import Header from "./components/Header";
+import DashboardLayout from "./components/DashboardLayout";
+
 
 
 
@@ -171,59 +174,67 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 720, margin: "40px auto", padding: 16, fontFamily: "system-ui, Arial" }}>
-      <h1 style={{ marginBottom: 8 }}>FocusFlow</h1>
-      <p style={{ marginTop: 0, opacity: 0.8 }}>Minimal UI (Tasks)</p>
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: 16, fontFamily: "system-ui, Arial" }}>
+      <Header />
+      <DashboardLayout
+        left={
+          <>
+            <h1 style={{ marginBottom: 8 }}>FocusFlow</h1>
+            <p style={{ marginTop: 0, opacity: 0.8 }}>Minimal UI (Tasks)</p>
 
-      <form onSubmit={createTask} style={{ display: "flex", gap: 8, marginTop: 16 }}>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="New task title..."
-          style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
-        />
-        <button
-          type="submit"
-          disabled={loading || !title.trim()}
-          style={{ padding: "10px 14px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-        >
-          {loading ? "Adding..." : "Add"}
-        </button>
-      </form>
+            <form onSubmit={createTask} style={{ display: "flex", gap: 8, marginTop: 16 }}>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="New task title..."
+                style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+              />
+              <button
+                type="submit"
+                disabled={loading || !title.trim()}
+                style={{ padding: "10px 14px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
+              >
+                {loading ? "Adding..." : "Add"}
+              </button>
+            </form>
 
-      {error ? (
-        <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
-          <strong>Error:</strong> {error}
-        </div>
-      ) : null}
+            {error ? (
+              <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
+                <strong>Error:</strong> {error}
+              </div>
+            ) : null}
 
-      <FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />
+            <FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />
 
 
 
-      <div style={{ marginTop: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <h2 style={{ margin: 0 }}>Tasks</h2>
-        <button
-          onClick={fetchTasks}
-          style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-        >
-          Refresh
-        </button>
-      </div>
+            <div style={{ marginTop: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 style={{ margin: 0 }}>Tasks</h2>
+              <button
+                onClick={fetchTasks}
+                style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
+              >
+                Refresh
+              </button>
+            </div>
 
-      <TaskList
-        tasks={tasks}
-        focusTaskId={focus.taskId}
-        onStartFocus={startFocus}
-        onDelete={deleteTask}
-        onComplete={completeTask}
-        onUpdateStatus={updateTaskStatus}
+            <TaskList
+              tasks={tasks}
+              focusTaskId={focus.taskId}
+              onStartFocus={startFocus}
+              onDelete={deleteTask}
+              onComplete={completeTask}
+              onUpdateStatus={updateTaskStatus}
+            />
+          </>
+        }
+        right={
+          <>
+            <DailyFocusStats />
+            <FocusHistory />
+          </>
+        }
       />
-      <DailyFocusStats />
-      <FocusHistory />
-
-
-
     </div>
   );
 }
