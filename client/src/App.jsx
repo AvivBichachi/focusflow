@@ -17,6 +17,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [focus, setFocus] = useState({ taskId: null, focusedAt: null });
+  const [analyticsRefreshToken, setAnalyticsRefreshToken] = useState(0);
+
+
+  function bumpAnalytics() {
+    setAnalyticsRefreshToken((x) => x + 1);
+  }
 
 
   async function fetchTasks() {
@@ -99,6 +105,7 @@ export default function App() {
         throw new Error(j?.error || "Failed to stop focus");
       }
       setFocus({ taskId: null, focusedAt: null });
+      bumpAnalytics();
     } catch (e) {
       setError(e.message || "Failed to stop focus");
     }
@@ -125,7 +132,9 @@ export default function App() {
     } catch (e) {
       setError(e.message || "Failed to delete task");
     }
+
   }
+
   async function updateTaskStatus(taskId, status) {
     setError("");
     try {
@@ -230,8 +239,8 @@ export default function App() {
         }
         right={
           <>
-            <DailyFocusStats />
-            <FocusHistory />
+            <DailyFocusStats refreshToken={analyticsRefreshToken} />
+            <FocusHistory refreshToken={analyticsRefreshToken} />
           </>
         }
       />

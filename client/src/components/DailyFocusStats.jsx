@@ -8,7 +8,7 @@ function formatMinutes(totalSeconds) {
   return `${minutes} min`;
 }
 
-export default function DailyFocusStats() {
+export default function DailyFocusStats({ refreshToken }) {
   const [days, setDays] = useState(7);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ export default function DailyFocusStats() {
   useEffect(() => {
     fetchDaily();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [days]);
+  }, [days, refreshToken]);
 
   return (
     <div style={{ marginTop: 32, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
