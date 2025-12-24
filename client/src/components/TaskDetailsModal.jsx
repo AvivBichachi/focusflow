@@ -67,7 +67,12 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         ) : null}
 
                         <button
-                            onClick={() => onDelete?.(task.id)}
+                            onClick={() => {
+                                if (!task) return;
+                                const ok = window.confirm(`Delete task "${task.title}"? This cannot be undone.`);
+                                if (!ok) return;
+                                onDelete?.(task.id);
+                            }}
                             style={{
                                 border: "1px solid #ccc",
                                 background: "black",
