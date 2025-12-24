@@ -8,7 +8,7 @@ function formatMinutes(totalSeconds) {
   return `${minutes} min`;
 }
 
-export default function DailyFocusStats() {
+export default function DailyFocusStats({ refreshToken }) {
   const [days, setDays] = useState(7);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ export default function DailyFocusStats() {
   useEffect(() => {
     fetchDaily();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [days]);
+  }, [days, refreshToken]);
 
   return (
     <div style={{ marginTop: 32, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
@@ -56,19 +56,12 @@ export default function DailyFocusStats() {
               onChange={(e) => setDays(Number(e.target.value))}
               style={{ marginLeft: 6, padding: "6px 8px", borderRadius: 8, border: "1px solid #ccc" }}
             >
+              <option value={1}>1</option>
               <option value={7}>7</option>
               <option value={14}>14</option>
               <option value={30}>30</option>
             </select>
           </label>
-
-          <button
-            onClick={fetchDaily}
-            disabled={loading}
-            style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-          >
-            {loading ? "Loading..." : "Refresh"}
-          </button>
         </div>
       </div>
 

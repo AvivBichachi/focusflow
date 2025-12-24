@@ -98,7 +98,8 @@ export async function getDailyFocusStats({ days, tz }) {
 FROM focus_sessions
 WHERE
   ended_at IS NOT NULL
-  AND started_at >= (now() - ($1 || ' days')::interval)
+  AND started_at >= (
+  ((timezone($2, now())::date - ($1 - 1))::timestamp AT TIME ZONE $2))
 GROUP BY to_char(timezone($2, started_at), 'YYYY-MM-DD')
 ORDER BY day DESC
 

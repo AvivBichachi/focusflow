@@ -17,7 +17,7 @@ function formatLocal(isoOrNull) {
   return d.toLocaleString();
 }
 
-export default function FocusHistory() {
+export default function FocusHistory({ refreshToken }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,19 +39,12 @@ export default function FocusHistory() {
 
   useEffect(() => {
     fetchSessions();
-  }, []);
+  }, [refreshToken]);
 
   return (
     <div style={{ marginTop: 32, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <h2 style={{ margin: 0 }}>Focus History</h2>
-        <button
-          onClick={fetchSessions}
-          disabled={loading}
-          style={{ padding: "6px 10px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-        >
-          {loading ? "Loading..." : "Refresh"}
-        </button>
       </div>
 
       {error ? (
