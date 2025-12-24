@@ -39,7 +39,6 @@ export default function DailyFocusStats({ refreshToken }) {
   }
 
   useEffect(() => {
-    console.log("fetchDaily days =", days);
     fetchDaily();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days, refreshToken]);

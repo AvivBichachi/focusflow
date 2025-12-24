@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 
 function formatElapsed(seconds) {
   const s = Math.max(0, Math.floor(Number(seconds || 0)));
-  const mm = String(Math.floor(s / 60)).padStart(2, "0");
-  const ss = String(s % 60).padStart(2, "0");
-  return `${mm}:${ss}`;
+  const hh = Math.floor(s / 3600);
+  const mm = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+
+  if (hh > 0) {
+    return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
+  }
+
+  return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 }
+
 
 
 
@@ -49,7 +56,7 @@ export default function FocusPanel({ focus, tasks, onStopFocus }) {
           <div style={{ marginBottom: 8 }}>
             Currently focusing on task: <strong>{focusedTitle || "Unknown task"}</strong>
           </div>
-          
+
           <div style={{ marginTop: 6, fontSize: 12, opacity: 0.8 }}>
             Elapsed: <strong>{formatElapsed(elapsedSeconds)}</strong>
           </div>
