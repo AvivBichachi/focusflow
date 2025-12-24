@@ -240,7 +240,16 @@ export default function App() {
         open={!!selectedTaskId}
         task={selectedTask}
         onClose={() => setSelectedTaskId(null)}
+        onComplete={async (taskId) => {
+          await completeTask(taskId);
+          setSelectedTaskId(null);
+        }}
+        onDelete={async (taskId) => {
+          await deleteTask(taskId);
+          setSelectedTaskId(null);
+        }}
       />
+
 
     </div>
   );
