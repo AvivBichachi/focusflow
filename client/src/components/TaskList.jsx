@@ -17,7 +17,7 @@ function sortTasks(a, b) {
   return bTime - aTime;
 }
 
-export default function TaskList({ tasks, focusTaskId, onStartFocus, onDelete, onComplete, onUpdateStatus }) {
+export default function TaskList({ tasks, focusTaskId, onStartFocus, onDelete, onComplete, onUpdateStatus, onOpenDetails  }) {
 
   const sortedTasks = [...tasks].sort(sortTasks);
 
@@ -35,6 +35,7 @@ export default function TaskList({ tasks, focusTaskId, onStartFocus, onDelete, o
             onDelete={onDelete}
             onComplete={onComplete}
             onUpdateStatus={onUpdateStatus}
+            onOpenDetails ={onOpenDetails}
           />
 
         ))}

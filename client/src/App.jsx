@@ -16,7 +16,6 @@ const API_BASE = "/api";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [focus, setFocus] = useState({ taskId: null, focusedAt: null });
@@ -226,6 +225,7 @@ export default function App() {
               onDelete={deleteTask}
               onComplete={completeTask}
               onUpdateStatus={updateTaskStatus}
+              onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
             />
           </>
         }

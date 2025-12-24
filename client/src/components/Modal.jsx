@@ -23,6 +23,7 @@ export default function Modal({ open, title, onClose, children }) {
         style={{
           width: "min(720px, 100%)",
           background: "white",
+          backgroundColor: "black",
           borderRadius: 12,
           border: "1px solid #ddd",
           boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
@@ -45,6 +46,7 @@ export default function Modal({ open, title, onClose, children }) {
             style={{
               border: "1px solid #ccc",
               background: "white",
+              backgroundColor: "black",
               borderRadius: 8,
               padding: "6px 10px",
               cursor: "pointer",
