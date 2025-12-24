@@ -65,18 +65,20 @@ export default function FocusHistory() {
       ) : null}
 
       {items.length > 0 ? (
-        <ul style={{ marginTop: 12, paddingLeft: 18 }}>
-          {items.map((s) => (
-            <li key={s.id} style={{ marginBottom: 10 }}>
-              <div style={{ fontWeight: 600 }}>{s.taskTitle ?? "Unknown task"}</div>
-              <div style={{ fontSize: 12, opacity: 0.8 }}>
-                Duration: {formatDuration(s.durationSeconds)}{" | "}
-                Start: {formatLocal(s.startedAt)}{" | "}
-                End: {formatLocal(s.endedAt)}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div style={{ marginTop: 12, maxHeight: 420, overflowY: "auto", paddingRight: 6 }}>
+          <ul style={{ marginTop: 0, paddingLeft: 18 }}>
+            {items.map((s) => (
+              <li key={s.id} style={{ marginBottom: 10 }}>
+                <div style={{ fontWeight: 600 }}>{s.taskTitle ?? "Unknown task"}</div>
+                <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  Duration: {formatDuration(s.durationSeconds)}{" | "}
+                  Start: {formatLocal(s.startedAt)}{" | "}
+                  End: {formatLocal(s.endedAt)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
     </div>
   );
