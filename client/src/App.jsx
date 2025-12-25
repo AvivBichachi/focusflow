@@ -222,8 +222,6 @@ export default function App() {
               tasks={tasks}
               focusTaskId={focus.taskId}
               onStartFocus={startFocus}
-              onDelete={deleteTask}
-              onComplete={completeTask}
               onUpdateStatus={updateTaskStatus}
               onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
             />

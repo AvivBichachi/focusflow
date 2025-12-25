@@ -1,4 +1,4 @@
-export default function TaskItem({ task, focusTaskId, onStartFocus, onDelete, onComplete, onUpdateStatus, onOpenDetails }) {
+export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStatus, onOpenDetails }) {
     const isCompleted = task.status === "COMPLETED";
     const canToggleProgress = !isCompleted;
     const nextStatus = task.status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS";
@@ -8,8 +8,9 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onDelete, on
         <li style={{ marginBottom: 10 }}>
             <div
                 onClick={(e) => {
-                        e.stopPropagation();
-                         onOpenDetails?.(task.id);}}
+                    e.stopPropagation();
+                    onOpenDetails?.(task.id);
+                }}
                 style={{ cursor: "pointer" }}
             >
                 <div>
@@ -25,42 +26,32 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onDelete, on
                             : "—"}
                     </span>
                 </div>
+                {!isCompleted ? (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onStartFocus(task.id);
+                        }}
+                        disabled={!!focusTaskId}
+                        style={{ marginTop: 6, padding: "4px 8px", cursor: "pointer" }}
+                    >
+                        Focus
+                    </button>
+                ) : null}
+                
+                {!isCompleted ? (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onUpdateStatus(task.id, nextStatus);
+                        }}
+                        style={{ padding: "4px 8px", cursor: "pointer" }}
+                    >
+                        {toggleLabel}
+                    </button>
+                ) : null}
 
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onStartFocus(task.id);}}
-                    disabled={!!focusTaskId}
-                    style={{ marginTop: 6, padding: "4px 8px", cursor: "pointer" }}
-                >
-                    Focus
-                </button>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onUpdateStatus(task.id, nextStatus);}}
-                    disabled={!canToggleProgress}
-                    style={{ padding: "4px 8px", cursor: "pointer" }}
-                >
-                    {toggleLabel}
-                </button>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onComplete(task.id);}}
-                    disabled={isCompleted}
-                    style={{ padding: "4px 8px", cursor: "pointer" }}
-                >
-                    Complete
-                </button>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(task.id);}}
-                    style={{ padding: "4px 8px", cursor: "pointer" }}
-                >
-                    Delete
-                </button>
+
             </div>
         </li>
     );
