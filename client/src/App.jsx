@@ -179,6 +179,28 @@ export default function App() {
     }
   }
 
+  async function saveTaskEdits(taskId, updates) {
+    setError("");
+    try {
+      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error || `Failed to update task (${res.status})`);
+      }
+
+      await fetchTasks();
+    } catch (e) {
+      setError(e.message || "Failed to update task");
+      throw e; // כדי שהמודל לא ייצא מ-edit אם נכשל
+    }
+  }
+
+
 
 
 
@@ -222,8 +244,6 @@ export default function App() {
               tasks={tasks}
               focusTaskId={focus.taskId}
               onStartFocus={startFocus}
-              onDelete={deleteTask}
-              onComplete={completeTask}
               onUpdateStatus={updateTaskStatus}
               onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
             />
@@ -248,6 +268,7 @@ export default function App() {
           await deleteTask(taskId);
           setSelectedTaskId(null);
         }}
+        onSave={saveTaskEdits}
       />
 
 
