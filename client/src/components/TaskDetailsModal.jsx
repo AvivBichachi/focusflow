@@ -8,7 +8,7 @@ function formatDateTime(value) {
     return d.toLocaleString();
 }
 
-export default function TaskDetailsModal({ open, task, onClose, onComplete, onDelete }) {
+export default function TaskDetailsModal({ open, task, onClose, onComplete, onDelete, onSave }) {
     const [isEditing, setIsEditing] = useState(false);
 
     const [draftTitle, setDraftTitle] = useState("");
@@ -141,15 +141,24 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                                 </button>
 
                                 <button
-                                    onClick={() => {
-                                        // UI-only for now
-                                        console.log("SAVE DRAFT", {
-                                            title: draftTitle,
-                                            description: draftDescription,
+                                    onClick={async () => {
+                                        if (!task) return;
+
+                                        const title = draftTitle.trim();
+                                        if (!title) return;
+
+                                        // UI dueDate הוא YYYY-MM-DD. אם ריק -> null.
+                                        const dueDate = draftDueDate ? draftDueDate : null;
+
+                                        const updates = {
+                                            title,
+                                            description: draftDescription.trim() ? draftDescription.trim() : null,
                                             priority: draftPriority,
-                                            dueDate: draftDueDate,
+                                            dueDate,
                                             status: draftStatus,
-                                        });
+                                        };
+
+                                        await onSave?.(task.id, updates);
                                         setIsEditing(false);
                                     }}
                                     style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
