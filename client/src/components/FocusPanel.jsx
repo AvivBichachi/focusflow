@@ -49,13 +49,9 @@ export default function FocusPanel({ focus, tasks, onStopFocus }) {
     <div className={`focusHero ${isActive ? "isActive" : "isIdle"}`}>
       <div className="focusHeroHeader">
         <div className="focusHeroTitle">Focus</div>
-        {isActive ? (
-          <div className="focusHeroMeta">
-            Started: {new Date(focus.focusedAt).toLocaleTimeString()}
-          </div>
-        ) : (
-          <div className="focusHeroMeta">No active session</div>
-        )}
+        <div className="focusHeroMeta">
+          {isActive ? `Started: ${new Date(focus.focusedAt).toLocaleTimeString()}` : "No active session"}
+        </div>
       </div>
 
       <div className="focusTimer" aria-label="elapsed time">

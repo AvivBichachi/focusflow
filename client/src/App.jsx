@@ -231,7 +231,7 @@ export default function App() {
             </>
           }
           topRight={
-            <>
+            <div className="panel">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
                 <button
@@ -241,7 +241,7 @@ export default function App() {
                   Refresh
                 </button>
               </div>
-              <div style={{ overflow: "auto", flex: 1, paddingRight: 6 }}>
+              <div className="panelBody">
                 <TaskList
                   tasks={tasks}
                   focusTaskId={focus.taskId}
@@ -250,7 +250,7 @@ export default function App() {
                   onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
                 />
               </div>
-            </>
+            </div>
           }
           hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
           bottomLeft={<DailyFocusStats refreshToken={analyticsRefreshToken} />}
@@ -270,8 +270,6 @@ export default function App() {
           }}
           onSave={saveTaskEdits}
         />
-
-
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export default function TaskList({ tasks, focusTaskId, onStartFocus, onDelete, o
   const sortedTasks = [...tasks].sort(sortTasks);
 
   return (
-    <div style={{ maxHeight: 520, overflowY: "auto", marginTop: 12, paddingRight: 6 }}>
+    <div style={{ marginTop: 12, paddingRight: 6 }}>
       <ul style={{ marginTop: 0, paddingLeft: 18 }}>
         {sortedTasks.length === 0 ? <li>No tasks yet</li> : null}
 
