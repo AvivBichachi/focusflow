@@ -19,6 +19,3 @@ html, body {
 html {
   scrollbar-gutter: stable;
 }
-
-.appMain { outline: 2px solid lime; }
-.dash { outline: 2px solid red; }
