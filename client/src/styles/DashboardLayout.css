@@ -1,12 +1,16 @@
 .dash {
-    width: min(1050px, 92vw);
-    margin: 0 auto;
-    padding: 28px 0;
+    width: 100%;
+    max-width: 1600px;
+    padding: 24px 32px;
+    margin: 0;
+    /* לא auto */
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.05fr 0.95fr;
     grid-template-rows: auto minmax(320px, 1fr) auto;
     gap: 16px;
 }
+
+
 
 .dashTopLeft {
     grid-column: 1;

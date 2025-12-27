@@ -213,64 +213,66 @@ export default function App() {
   return (
     <div className="appShell">
       <Header />
-      <DashboardLayout
-        topLeft={
-          <>
-            <h2 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 700 }}>Add Your Task</h2>
+      <div className="appMain">
+        <DashboardLayout
+          topLeft={
+            <>
+              <h2 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 700 }}>Add Your Task</h2>
 
-            <TaskForm loading={loading} onCreate={createTask} />
+              <TaskForm loading={loading} onCreate={createTask} />
 
 
-            {error ? (
-              <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
-                <strong>Error:</strong> {error}
+              {error ? (
+                <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
+                  <strong>Error:</strong> {error}
+                </div>
+              ) : null}
+
+            </>
+          }
+          topRight={
+            <>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
+                <button
+                  onClick={fetchTasks}
+                  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
+                >
+                  Refresh
+                </button>
               </div>
-            ) : null}
-
-          </>
-        }
-        topRight={
-          <>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
-              <button
-                onClick={fetchTasks}
-                style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-              >
-                Refresh
-              </button>
-            </div>
-            <div style={{ overflow: "auto", flex: 1, paddingRight: 6 }}>
-              <TaskList
-                tasks={tasks}
-                focusTaskId={focus.taskId}
-                onStartFocus={startFocus}
-                onUpdateStatus={updateTaskStatus}
-                onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
-              />
-            </div>
-          </>
-        }
-        hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
-        bottomLeft={<DailyFocusStats refreshToken={analyticsRefreshToken} />}
-        bottomRight={<FocusHistory refreshToken={analyticsRefreshToken} />}
-      />
-      <TaskDetailsModal
-        open={!!selectedTaskId}
-        task={selectedTask}
-        onClose={() => setSelectedTaskId(null)}
-        onComplete={async (taskId) => {
-          await completeTask(taskId);
-          setSelectedTaskId(null);
-        }}
-        onDelete={async (taskId) => {
-          await deleteTask(taskId);
-          setSelectedTaskId(null);
-        }}
-        onSave={saveTaskEdits}
-      />
+              <div style={{ overflow: "auto", flex: 1, paddingRight: 6 }}>
+                <TaskList
+                  tasks={tasks}
+                  focusTaskId={focus.taskId}
+                  onStartFocus={startFocus}
+                  onUpdateStatus={updateTaskStatus}
+                  onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
+                />
+              </div>
+            </>
+          }
+          hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
+          bottomLeft={<DailyFocusStats refreshToken={analyticsRefreshToken} />}
+          bottomRight={<FocusHistory refreshToken={analyticsRefreshToken} />}
+        />
+        <TaskDetailsModal
+          open={!!selectedTaskId}
+          task={selectedTask}
+          onClose={() => setSelectedTaskId(null)}
+          onComplete={async (taskId) => {
+            await completeTask(taskId);
+            setSelectedTaskId(null);
+          }}
+          onDelete={async (taskId) => {
+            await deleteTask(taskId);
+            setSelectedTaskId(null);
+          }}
+          onSave={saveTaskEdits}
+        />
 
 
+      </div>
     </div>
   );
 }

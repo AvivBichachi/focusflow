@@ -1,0 +1,23 @@
+.headerOuter {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14); /* לא לבן בוהק */
+}
+
+.headerInner {
+  width: 100%;
+  max-width: 1800px;      /* זהה ל-.dash */
+  margin: 0 auto;
+  padding: 16px 32px;     /* זהה ל-.dash padding אופקי */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerBrand {
+  font-weight: 700;
+}
+
+.headerTagline {
+  opacity: 0.8;
+  font-size: 14px;
+}
