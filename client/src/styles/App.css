@@ -1,0 +1,21 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.appShell {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.appMain {
+  width: 100%;
+  display: flex;
+  justify-content: center;   /* זה מרכז חד-משמעית */
+  padding: 24px 0;           /* padding אנכי בלבד כדי לא לשנות centering */
+}
+
+html {
+  scrollbar-gutter: stable;
+}

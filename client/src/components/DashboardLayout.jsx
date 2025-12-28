@@ -1,15 +1,22 @@
-export default function DashboardLayout({ left, right }) {
+import React from "react";
+import "../styles/DashboardLayout.css";
+
+export default function DashboardLayout({
+  topLeft,
+  topRight,
+  hero,
+  bottomLeft,
+  bottomRight,
+}) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 24,
-        alignItems: "flex-start",
-      }}
-    >
-      <div>{left}</div>
-      <div>{right}</div>
+    <div className="dash">
+      <div className="dashTopLeft panel">{topLeft}</div>
+      <div className="dashTopRight panel">{topRight}</div>
+
+      <div className="dashHero heroPanel">{hero}</div>
+
+      <div className="dashBottomLeft panel">{bottomLeft}</div>
+      <div className="dashBottomRight panel">{bottomRight}</div>
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default function TaskForm({ loading, onCreate }) {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description (optional)..."
                 rows={3}
-                style={{ width: "100%", marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+                style={{width: "100%", marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #ccc", boxSizing: "border-box" }}
             />
         </form>
     );

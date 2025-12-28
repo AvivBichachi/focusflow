@@ -1,0 +1,70 @@
+.focusHero {
+  width: 100%;
+  display: grid;
+  gap: 14px;
+  padding: 10px 8px;
+}
+
+.focusHeroHeader {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.focusHeroTitle {
+  font-weight: 900;
+  font-size: 48px;
+  letter-spacing: 2px;
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+.focusHeroMeta {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.focusTimer {
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.focusTaskTitle {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.focusTaskStrong {
+  font-weight: 800;
+  opacity: 1;
+}
+
+.focusActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+}
+
+.focusHint {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.8;
+  max-width: 56ch;
+}
+
+.focusBtn {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.focusBtnDanger {
+  border-color: rgba(255, 255, 255, 0.22);
+}

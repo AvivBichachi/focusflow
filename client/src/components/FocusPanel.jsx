@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-
-
+import { useEffect, useMemo, useState } from "react";
+import "../styles/FocusPanel.css";
 
 function formatElapsed(seconds) {
   const s = Math.max(0, Math.floor(Number(seconds || 0)));
@@ -15,17 +14,18 @@ function formatElapsed(seconds) {
   return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 }
 
-
-
-
 export default function FocusPanel({ focus, tasks, onStopFocus }) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
-  const focusedTitle =
-    focus?.taskId ? tasks.find((t) => t.id === focus.taskId)?.title : null;
+  const isActive = Boolean(focus?.taskId && focus?.focusedAt);
+
+  const focusedTitle = useMemo(() => {
+    if (!focus?.taskId) return null;
+    return tasks.find((t) => t.id === focus.taskId)?.title ?? null;
+  }, [focus?.taskId, tasks]);
 
   useEffect(() => {
-    if (!focus?.taskId || !focus?.focusedAt) {
+    if (!isActive) {
       setElapsedSeconds(0);
       return;
     }
@@ -40,34 +40,45 @@ export default function FocusPanel({ focus, tasks, onStopFocus }) {
       setElapsedSeconds(diff);
     }
 
-    tick(); // חישוב מיידי
+    tick();
     const id = setInterval(tick, 1000);
-
     return () => clearInterval(id);
-  }, [focus?.taskId, focus?.focusedAt]);
-
+  }, [isActive, focus?.focusedAt]);
 
   return (
-    <div style={{ marginTop: 24, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-      <h3 style={{ marginTop: 0 }}>Focus</h3>
+    <div className={`focusHero ${isActive ? "isActive" : "isIdle"}`}>
+      <div className="focusHeroHeader">
+        <div className="focusHeroTitle">Focus</div>
+        <div className="focusHeroMeta">
+          {isActive ? `Started: ${new Date(focus.focusedAt).toLocaleTimeString()}` : "No active session"}
+        </div>
+      </div>
 
-      {focus?.taskId ? (
-        <>
-          <div style={{ marginBottom: 8 }}>
-            Currently focusing on task: <strong>{focusedTitle || "Unknown task"}</strong>
-          </div>
+      <div className="focusTimer" aria-label="elapsed time">
+        {isActive ? formatElapsed(elapsedSeconds) : "00:00"}
+      </div>
 
-          <div style={{ marginTop: 6, fontSize: 12, opacity: 0.8 }}>
-            Elapsed: <strong>{formatElapsed(elapsedSeconds)}</strong>
-          </div>
+      <div className="focusTaskTitle">
+        {isActive ? (
+          <>
+            Focusing on <span className="focusTaskStrong">{focusedTitle || "Unknown task"}</span>
+          </>
+        ) : (
+          "Pick a task and click Focus to start."
+        )}
+      </div>
 
-          <button onClick={onStopFocus} style={{ padding: "8px 12px", borderRadius: 8, cursor: "pointer" }}>
-            Stop focus
+      <div className="focusActions">
+        {isActive ? (
+          <button className="focusBtn focusBtnDanger" onClick={onStopFocus}>
+            Stop
           </button>
-        </>
-      ) : (
-        <div>No active focus</div>
-      )}
+        ) : (
+          <div className="focusHint">
+            Tip: use the <strong>Focus</strong> button on a task in the list.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

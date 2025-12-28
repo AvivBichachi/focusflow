@@ -1,0 +1,107 @@
+.dash {
+    width: 100%;
+    max-width: 1600px;
+    padding: 24px 32px;
+    margin: 0;
+    /* לא auto */
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-rows: auto minmax(320px, 1fr) auto;
+    gap: 16px;
+}
+
+
+
+.dashTopLeft {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: stretch;
+    height: 360px;
+    min-height: 360px;
+}
+
+.dashTopRight {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+    height: 360px;
+    min-height: 360px;
+}
+
+.dashHero {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    display: grid;
+    align-items: center;
+    min-height: 320px;
+}
+
+.dashBottomLeft {
+    grid-column: 1;
+    grid-row: 3;
+    height: 360px;
+    min-height: 360px;
+}
+
+.dashBottomRight {
+    grid-column: 2;
+    grid-row: 3;
+    height: 360px;
+    min-height: 360px;
+}
+
+.panel {
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panelBody {
+  flex: 1;
+  min-height: 0;        /* קריטי כדי ש-scroll יעבוד בפנים */
+  overflow: auto;
+}
+
+.heroPanel {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+@media (max-width: 900px) {
+    .dash {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+    }
+
+    .dashTopLeft,
+    .dashTopRight,
+    .dashHero,
+    .dashBottomLeft,
+    .dashBottomRight {
+        grid-column: 1;
+    }
+
+    .dashTopLeft {
+        grid-row: 1;
+    }
+
+    .dashTopRight {
+        grid-row: 2;
+    }
+
+    .dashHero {
+        grid-row: 3;
+    }
+
+    .dashBottomLeft {
+        grid-row: 4;
+    }
+
+    .dashBottomRight {
+        grid-row: 5;
+    }
+}

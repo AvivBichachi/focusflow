@@ -40,7 +40,7 @@ export default function DailyFocusStats({ refreshToken }) {
   }, [days, refreshToken]);
 
   return (
-    <div style={{ marginTop: 32, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
+    <div style={{ marginTop: 32, padding: 12}}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <h2 style={{ margin: 0 }}>Daily Focus Stats</h2>
 

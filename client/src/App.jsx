@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./styles/App.css";
 import FocusPanel from "./components/FocusPanel.jsx";
 import TaskList from "./components/TaskList.jsx";
 import FocusHistory from "./components/FocusHistory";
@@ -210,68 +211,74 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: 16, fontFamily: "system-ui, Arial" }}>
+    <div className="appShell">
       <Header />
-      <DashboardLayout
-        left={
-          <>
-            <h1 style={{ marginBottom: 8 }}>Add Your Task</h1>
+      <div className="appMain">
+        <DashboardLayout
+          topLeft={
+            <>
+              <h2 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 700 }}>Add Your Task</h2>
 
-            <TaskForm loading={loading} onCreate={createTask} />
+              <TaskForm loading={loading} onCreate={createTask} />
 
 
-            {error ? (
-              <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
-                <strong>Error:</strong> {error}
+              {error ? (
+                <div style={{ marginTop: 12, padding: 10, border: "1px solid #f5c2c7", borderRadius: 8 }}>
+                  <strong>Error:</strong> {error}
+                </div>
+              ) : null}
+
+            </>
+          }
+          topRight={
+            <div className="panelBody">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
+                <button
+                  onClick={fetchTasks}
+                  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
+                >
+                  Refresh
+                </button>
               </div>
-            ) : null}
-
-            <FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />
-
-
-
-            <div style={{ marginTop: 24, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <h2 style={{ margin: 0 }}>Tasks</h2>
-              <button
-                onClick={fetchTasks}
-                style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-              >
-                Refresh
-              </button>
+              <div className="panelBody">
+                <TaskList
+                  tasks={tasks}
+                  focusTaskId={focus.taskId}
+                  onStartFocus={startFocus}
+                  onUpdateStatus={updateTaskStatus}
+                  onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
+                />
+              </div>
             </div>
-
-            <TaskList
-              tasks={tasks}
-              focusTaskId={focus.taskId}
-              onStartFocus={startFocus}
-              onUpdateStatus={updateTaskStatus}
-              onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
-            />
-          </>
-        }
-        right={
-          <>
-            <DailyFocusStats refreshToken={analyticsRefreshToken} />
-            <FocusHistory refreshToken={analyticsRefreshToken} />
-          </>
-        }
-      />
-      <TaskDetailsModal
-        open={!!selectedTaskId}
-        task={selectedTask}
-        onClose={() => setSelectedTaskId(null)}
-        onComplete={async (taskId) => {
-          await completeTask(taskId);
-          setSelectedTaskId(null);
-        }}
-        onDelete={async (taskId) => {
-          await deleteTask(taskId);
-          setSelectedTaskId(null);
-        }}
-        onSave={saveTaskEdits}
-      />
-
-
+          }
+          hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
+          bottomLeft={
+            <div className="panelBody">
+              <DailyFocusStats refreshToken={analyticsRefreshToken} />
+            </div>
+          }
+          bottomRight={
+            <div className="panelBody">
+              <FocusHistory refreshToken={analyticsRefreshToken} />
+            </div>
+          }
+        />
+        <TaskDetailsModal
+          open={!!selectedTaskId}
+          task={selectedTask}
+          onClose={() => setSelectedTaskId(null)}
+          onComplete={async (taskId) => {
+            await completeTask(taskId);
+            setSelectedTaskId(null);
+          }}
+          onDelete={async (taskId) => {
+            await deleteTask(taskId);
+            setSelectedTaskId(null);
+          }}
+          onSave={saveTaskEdits}
+        />
+      </div>
     </div>
   );
 }
