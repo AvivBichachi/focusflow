@@ -1,3 +1,5 @@
+import '../styles/TaskItem.css'
+
 export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStatus, onOpenDetails }) {
     const isCompleted = task.status === "COMPLETED";
     const canToggleProgress = !isCompleted;
@@ -13,13 +15,15 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStat
                 }}
                 style={{ cursor: "pointer" }}
             >
-                <div>
+                <div className='taskTitleRow'>
                     <span style={{ fontWeight: 600 }}>{task.title}</span>{" "}
                     <span style={{ opacity: 0.7 }}>({task.status})</span>
                 </div>
 
                 <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>
-                    <span>Priority: {task.priority ?? "—"}</span>{" | "}
+                    <span className={`priorityBadge p-${(task.priority || "MEDIUM").toLowerCase()}`}>
+                        {task.priority || "MEDIUM"}
+                    </span>{" | "}
                     <span>
                         Due: {task.dueDate
                             ? new Date(task.dueDate).toLocaleDateString()
@@ -37,7 +41,7 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStat
                         Focus
                     </button>
                 ) : null}
-                
+
                 {!isCompleted ? (
                     <button
                         onClick={(e) => {
