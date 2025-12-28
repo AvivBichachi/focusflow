@@ -1,93 +1,125 @@
 .taskTitleRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 
 .priorityBadge {
-  display: inline-flex;
-  align-items: center;
-  height: 20px;
-  padding: 0 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.85);
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 /* Very subtle differentiation */
 .priorityBadge.p-low {
-  background: rgba(16,185,129,0.10);
-  border-color: rgba(16,185,129,0.22);
+    background: rgba(16, 185, 129, 0.10);
+    border-color: rgba(16, 185, 129, 0.22);
 }
 
 .priorityBadge.p-medium {
-  background: rgba(59,130,246,0.12);
-  border-color: rgba(59,130,246,0.25);
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.25);
 }
 
 .priorityBadge.p-high {
-  background: rgba(239,68,68,0.10);
-  border-color: rgba(239,68,68,0.22);
+    background: rgba(239, 68, 68, 0.10);
+    border-color: rgba(239, 68, 68, 0.22);
 }
 
 .taskItem {
-  margin-bottom: 12px;
-  list-style: none;
+    margin-bottom: 12px;
+    list-style: none;
 }
 
 .taskCard {
-  border-radius: 12px;
-  padding: 12px 12px;
-  cursor: pointer;
+    border-radius: 12px;
+    padding: 12px 12px;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04),
+        0 10px 26px rgba(0, 0, 0, 0.22);
+
+    transition: background 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
 }
 
 .taskCard:hover {
-  background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06),
+        0 14px 34px rgba(0, 0, 0, 0.30);
+    transform: translateY(-1px);
 }
+
 
 .taskCard:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-  border-radius: 12px;
+    outline: none;
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.22),
+        0 14px 34px rgba(0, 0, 0, 0.30);
 }
+
 
 .taskTitle {
-  font-weight: 700;
+    flex: 1;
+    /* שיקח את רוב השורה */
+    min-width: 0;
+    /* קריטי בתוך flex כדי לאפשר overflow */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.3;
+    word-break: break-word;
+    /* כדי למנוע מילה אינסופית ששוברת layout */
 }
 
+
+
 .taskStatus {
-  opacity: 0.7;
+    flex: 0 0 auto;
+    /* שלא ידחוף את הטייטל */
+    opacity: 0.7;
 }
 
 .taskMeta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  opacity: 0.85;
-  margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 6px;
 }
 
 .taskMetaSep {
-  opacity: 0.6;
+    opacity: 0.6;
 }
 
+
 .taskActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
 }
+
+
 
 /* כדי שהכפתורים לא יהיו ענקיים בתוך המשימה */
 .taskActions .btn {
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 10px;
 }
