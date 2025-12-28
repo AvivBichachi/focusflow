@@ -231,7 +231,7 @@ export default function App() {
             </>
           }
           topRight={
-            <div className="panel">
+            <div className="panelBody">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
                 <button
