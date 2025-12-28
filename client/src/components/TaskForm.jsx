@@ -36,12 +36,12 @@ export default function TaskForm({ loading, onCreate }) {
 
     return (
         <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="row">
                 <input
+                    className="input"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="New task title..."
-                    style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
                 />
 
                 <button
@@ -54,31 +54,35 @@ export default function TaskForm({ loading, onCreate }) {
             </div>
 
             <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                <select
-                    value={priority}
-                    onChange={(e) => setPriority(e.target.value)}
-                    style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
-                >
-                    <option value="LOW">LOW</option>
-                    <option value="MEDIUM">MEDIUM</option>
-                    <option value="HIGH">HIGH</option>
-                </select>
+                <div className="priorityToggle" role="group" aria-label="Task priority">
+                    {["LOW", "MEDIUM", "HIGH"].map((p) => (
+                        <button
+                            key={p}
+                            type="button"
+                            className={`priorityPill ${priority === p ? "isActive" : ""}`}
+                            onClick={() => setPriority(p)}
+                            aria-pressed={priority === p}
+                        >
+                            {p}
+                        </button>
+                    ))}
+                </div>
 
                 <input
+                    className="input"
                     type="date"
                     value={dueDate}
                     min={new Date().toISOString().split("T")[0]}
                     onChange={(e) => setDueDate(e.target.value)}
-                    style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
                 />
             </div>
 
             <textarea
+                className="textarea"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description (optional)..."
                 rows={3}
-                style={{ width: "100%", marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #ccc", boxSizing: "border-box" }}
             />
         </form>
     );
