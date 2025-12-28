@@ -1,61 +1,60 @@
-import '../styles/TaskItem.css'
+import "../styles/TaskItem.css";
 
 export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStatus, onOpenDetails }) {
-    const isCompleted = task.status === "COMPLETED";
-    const canToggleProgress = !isCompleted;
-    const nextStatus = task.status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS";
-    const toggleLabel = task.status === "IN_PROGRESS" ? "Mark TODO" : "Mark In Progress";
+  const isCompleted = task.status === "COMPLETED";
+  const nextStatus = task.status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS";
+  const toggleLabel = task.status === "IN_PROGRESS" ? "Mark TODO" : "Mark In Progress";
 
-    return (
-        <li style={{ marginBottom: 10 }}>
-            <div
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenDetails?.(task.id);
-                }}
-                style={{ cursor: "pointer" }}
+  return (
+    <li className="taskItem">
+      <div
+        className="taskCard"
+        role="button"
+        tabIndex={0}
+        onClick={() => onOpenDetails?.(task.id)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") onOpenDetails?.(task.id);
+        }}
+      >
+        <div className="taskHeader">
+          <div className="taskTitleRow">
+            <span className="taskTitle">{task.title}</span>
+            <span className="taskStatus">({task.status})</span>
+          </div>
+
+          <div className="taskMeta">
+            <span className={`priorityBadge p-${(task.priority || "MEDIUM").toLowerCase()}`}>
+              {task.priority || "MEDIUM"}
+            </span>
+            <span className="taskMetaSep">|</span>
+            <span>
+              Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "—"}
+            </span>
+          </div>
+        </div>
+
+        {!isCompleted ? (
+          <div
+            className="taskActions"
+            onClick={(e) => e.stopPropagation()} // מונע פתיחת modal כשנוגעים בכפתורים
+          >
+            <button
+              className="btn btnPrimary"
+              onClick={() => onStartFocus(task.id)}
+              disabled={!!focusTaskId}
             >
-                <div className='taskTitleRow'>
-                    <span style={{ fontWeight: 600 }}>{task.title}</span>{" "}
-                    <span style={{ opacity: 0.7 }}>({task.status})</span>
-                </div>
+              Focus
+            </button>
 
-                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>
-                    <span className={`priorityBadge p-${(task.priority || "MEDIUM").toLowerCase()}`}>
-                        {task.priority || "MEDIUM"}
-                    </span>{" | "}
-                    <span>
-                        Due: {task.dueDate
-                            ? new Date(task.dueDate).toLocaleDateString()
-                            : "—"}
-                    </span>
-                </div>
-                {!isCompleted ? (
-                    <button className="btn btnPrimary"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onStartFocus(task.id);
-                        }}
-                        disabled={!!focusTaskId}
-                    >
-                        Focus
-                    </button>
-                ) : null}
-
-                {!isCompleted ? (
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onUpdateStatus(task.id, nextStatus);
-                        }}
-                        style={{ padding: "4px 8px", cursor: "pointer" }}
-                    >
-                        {toggleLabel}
-                    </button>
-                ) : null}
-
-
-            </div>
-        </li>
-    );
+            <button
+              className="btn btnSecondary"
+              onClick={() => onUpdateStatus(task.id, nextStatus)}
+            >
+              {toggleLabel}
+            </button>
+          </div>
+        ) : null}
+      </div>
+    </li>
+  );
 }

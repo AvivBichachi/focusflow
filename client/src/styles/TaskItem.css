@@ -34,3 +34,60 @@
   background: rgba(239,68,68,0.10);
   border-color: rgba(239,68,68,0.22);
 }
+
+.taskItem {
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+.taskCard {
+  border-radius: 12px;
+  padding: 12px 12px;
+  cursor: pointer;
+}
+
+.taskCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.taskCard:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  border-radius: 12px;
+}
+
+.taskTitle {
+  font-weight: 700;
+}
+
+.taskStatus {
+  opacity: 0.7;
+}
+
+.taskMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 6px;
+}
+
+.taskMetaSep {
+  opacity: 0.6;
+}
+
+.taskActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* כדי שהכפתורים לא יהיו ענקיים בתוך המשימה */
+.taskActions .btn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 10px;
+}
