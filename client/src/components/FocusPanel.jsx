@@ -70,7 +70,7 @@ export default function FocusPanel({ focus, tasks, onStopFocus }) {
 
       <div className="focusActions">
         {isActive ? (
-          <button className="focusBtn focusBtnDanger" onClick={onStopFocus}>
+          <button className="btn btnDanger" onClick={onStopFocus}>
             Stop
           </button>
         ) : (

@@ -234,10 +234,8 @@ export default function App() {
             <div className="panelBody">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
-                <button
-                  onClick={fetchTasks}
-                  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
-                >
+                <button className="btn"
+                  onClick={fetchTasks}>
                   Refresh
                 </button>
               </div>

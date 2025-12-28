@@ -45,9 +45,9 @@ export default function TaskForm({ loading, onCreate }) {
                 />
 
                 <button
+                    className="btn btnPrimary"
                     type="submit"
                     disabled={loading || !title.trim()}
-                    style={{ padding: "10px 14px", borderRadius: 8, border: "1px solid #ccc", cursor: "pointer" }}
                 >
                     {loading ? "Adding..." : "Add"}
                 </button>
@@ -78,7 +78,7 @@ export default function TaskForm({ loading, onCreate }) {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description (optional)..."
                 rows={3}
-                style={{width: "100%", marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #ccc", boxSizing: "border-box" }}
+                style={{ width: "100%", marginTop: 8, padding: 10, borderRadius: 8, border: "1px solid #ccc", boxSizing: "border-box" }}
             />
         </form>
     );

@@ -27,13 +27,12 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStat
                     </span>
                 </div>
                 {!isCompleted ? (
-                    <button
+                    <button className="btn btnPrimary"
                         onClick={(e) => {
                             e.stopPropagation();
                             onStartFocus(task.id);
                         }}
                         disabled={!!focusTaskId}
-                        style={{ marginTop: 6, padding: "4px 8px", cursor: "pointer" }}
                     >
                         Focus
                     </button>
