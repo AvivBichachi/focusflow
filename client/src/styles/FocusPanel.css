@@ -56,15 +56,3 @@
   opacity: 0.8;
   max-width: 56ch;
 }
-
-.focusBtn {
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 10px 16px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.focusBtnDanger {
-  border-color: rgba(255, 255, 255, 0.22);
-}

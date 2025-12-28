@@ -43,10 +43,9 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         {!isEditing ? (
                             <div style={{ fontWeight: 700 }}>{task.title}</div>
                         ) : (
-                            <input
+                            <input className="input"
                                 value={draftTitle}
                                 onChange={(e) => setDraftTitle(e.target.value)}
-                                style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
                             />
                         )}
 
@@ -60,12 +59,14 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         <div>
                             <div style={{ opacity: 0.7, fontSize: 12 }}>Priority</div>
                             {!isEditing ? (
-                                <div>{task.priority}</div>
+                                <span className={`priorityBadge p-${(task.priority || "MEDIUM").toLowerCase()}`}>
+                                    {task.priority || "MEDIUM"}
+                                </span>
                             ) : (
-                                <select value={draftPriority} onChange={(e) => setDraftPriority(e.target.value)} style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}>
-                                    <option value="LOW">LOW</option>
-                                    <option value="MEDIUM">MEDIUM</option>
-                                    <option value="HIGH">HIGH</option>
+                                <select className="input" value={draftPriority} onChange={(e) => setDraftPriority(e.target.value)} >
+                                    <option className="option" value="LOW">LOW</option>
+                                    <option className="option" value="MEDIUM">MEDIUM</option>
+                                    <option className="option" value="HIGH">HIGH</option>
                                 </select>
                             )}
                         </div>
@@ -76,12 +77,11 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         {!isEditing ? (
                             <div>{task.dueDate ? formatDateTime(task.dueDate) : "—"}</div>
                         ) : (
-                            <input
+                            <input className="input"
                                 type="date"
                                 value={draftDueDate}
                                 min={new Date().toISOString().slice(0, 10)}
                                 onChange={(e) => setDraftDueDate(e.target.value)}
-                                style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
                             />
                         )}
 
@@ -92,11 +92,10 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         {!isEditing ? (
                             <div style={{ whiteSpace: "pre-wrap" }}>{task.description || "—"}</div>
                         ) : (
-                            <textarea
+                            <textarea className="textarea"
                                 value={draftDescription}
                                 onChange={(e) => setDraftDescription(e.target.value)}
                                 rows={4}
-                                style={{ width: "100%", padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
                             />
                         )}
 
@@ -114,15 +113,14 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                     </div>
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
                         {!isEditing ? (
-                            <button
+                            <button className="btn btnPrimary"
                                 onClick={() => setIsEditing(true)}
-                                style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
                             >
                                 Edit
                             </button>
                         ) : (
                             <>
-                                <button
+                                <button className="btn btnSecondary"
                                     onClick={() => {
                                         // revert draft back to task values
                                         if (!task) return;
@@ -135,12 +133,11 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                                         const yyyyMmDd = iso && !Number.isNaN(iso.getTime()) ? iso.toISOString().slice(0, 10) : "";
                                         setDraftDueDate(yyyyMmDd);
                                     }}
-                                    style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
                                 >
                                     Cancel
                                 </button>
 
-                                <button
+                                <button className="btn btnPrimary"
                                     onClick={async () => {
                                         if (!task) return;
 
@@ -161,7 +158,6 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                                         await onSave?.(task.id, updates);
                                         setIsEditing(false);
                                     }}
-                                    style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
                                 >
                                     Save
                                 </button>
@@ -169,23 +165,21 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                         )}
 
                         {!isEditing && task?.status !== "COMPLETED" ? (
-                            <button
+                            <button className="btn btnPrimary"
                                 onClick={() => onComplete?.(task.id)}
-                                style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
                             >
                                 Complete
                             </button>
                         ) : null}
 
                         {!isEditing ? (
-                            <button
+                            <button className="btn btnDanger"
                                 onClick={() => {
                                     if (!task) return;
                                     const ok = window.confirm(`Delete task "${task.title}"? This cannot be undone.`);
                                     if (!ok) return;
                                     onDelete?.(task.id);
                                 }}
-                                style={{ border: "1px solid #ccc", background: "black", borderRadius: 8, padding: "8px 12px", cursor: "pointer" }}
                             >
                                 Delete
                             </button>

@@ -1,57 +1,71 @@
+import "../styles/TaskItem.css";
+
 export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStatus, onOpenDetails }) {
     const isCompleted = task.status === "COMPLETED";
-    const canToggleProgress = !isCompleted;
     const nextStatus = task.status === "IN_PROGRESS" ? "TODO" : "IN_PROGRESS";
     const toggleLabel = task.status === "IN_PROGRESS" ? "Mark TODO" : "Mark In Progress";
 
     return (
-        <li style={{ marginBottom: 10 }}>
+        <li className="taskItem">
             <div
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenDetails?.(task.id);
+                className="taskCard"
+                role="button"
+                tabIndex={0}
+                onClick={() => onOpenDetails?.(task.id)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        onOpenDetails?.(task.id);
+                    }
+                    if (e.key === " ") {
+                        e.preventDefault(); // למנוע scroll
+                    }
                 }}
-                style={{ cursor: "pointer" }}
+                onKeyUp={(e) => {
+                    if (e.key === " ") {
+                        e.preventDefault();
+                        onOpenDetails?.(task.id);
+                    }
+                }}
             >
-                <div>
-                    <span style={{ fontWeight: 600 }}>{task.title}</span>{" "}
-                    <span style={{ opacity: 0.7 }}>({task.status})</span>
+                <div className="taskHeader">
+                    <div className="taskTitleRow">
+                        <span className="taskTitle">{task.title}</span>
+                        <span className="taskStatus">({task.status})</span>
+                    </div>
+
+                    <div className="taskMeta">
+                        <span className={`priorityBadge p-${(task.priority || "MEDIUM").toLowerCase()}`}>
+                            {task.priority || "MEDIUM"}
+                        </span>
+                        <span className="taskMetaSep">|</span>
+                        <span>
+                            Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "—"}
+                        </span>
+                    </div>
                 </div>
 
-                <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>
-                    <span>Priority: {task.priority ?? "—"}</span>{" | "}
-                    <span>
-                        Due: {task.dueDate
-                            ? new Date(task.dueDate).toLocaleDateString()
-                            : "—"}
-                    </span>
-                </div>
                 {!isCompleted ? (
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onStartFocus(task.id);
-                        }}
-                        disabled={!!focusTaskId}
-                        style={{ marginTop: 6, padding: "4px 8px", cursor: "pointer" }}
+                    <div
+                        className="taskActions"
+                        onClick={(e) => e.stopPropagation()} // מונע פתיחת modal כשנוגעים בכפתורים
                     >
-                        Focus
-                    </button>
-                ) : null}
-                
-                {!isCompleted ? (
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onUpdateStatus(task.id, nextStatus);
-                        }}
-                        style={{ padding: "4px 8px", cursor: "pointer" }}
-                    >
-                        {toggleLabel}
-                    </button>
-                ) : null}
+                        <button
+                            className="btn btnPrimary"
+                            onClick={() => onStartFocus(task.id)}
+                            disabled={!!focusTaskId}
+                        >
+                            Focus
+                        </button>
 
-
+                        <button
+                            className="btn btnSecondary"
+                            onClick={() => onUpdateStatus(task.id, nextStatus)}
+                        >
+                            {toggleLabel}
+                        </button>
+                    </div>
+                ) : null}
             </div>
         </li>
     );
