@@ -253,8 +253,16 @@ export default function App() {
             </div>
           }
           hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
-          bottomLeft={<DailyFocusStats refreshToken={analyticsRefreshToken} />}
-          bottomRight={<FocusHistory refreshToken={analyticsRefreshToken} />}
+          bottomLeft={
+            <div className="panelBody">
+              <DailyFocusStats refreshToken={analyticsRefreshToken} />
+            </div>
+          }
+          bottomRight={
+            <div className="panelBody">
+              <FocusHistory refreshToken={analyticsRefreshToken} />
+            </div>
+          }
         />
         <TaskDetailsModal
           open={!!selectedTaskId}

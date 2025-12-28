@@ -37,7 +37,7 @@ export default function FocusHistory({ refreshToken }) {
   }, [refreshToken]);
 
   return (
-    <div style={{ marginTop: 32, padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
+    <div style={{ marginTop: 32, padding: 12}}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <h2 style={{ margin: 0 }}>Focus History</h2>
       </div>
@@ -53,7 +53,7 @@ export default function FocusHistory({ refreshToken }) {
       ) : null}
 
       {items.length > 0 ? (
-        <div style={{ marginTop: 12, maxHeight: 420, overflowY: "auto", paddingRight: 6 }}>
+        <div style={{ marginTop: 12, paddingRight: 6 }}>
           <ul style={{ marginTop: 0, paddingLeft: 18 }}>
             {items.map((s) => (
               <li key={s.id} style={{ marginBottom: 10 }}>

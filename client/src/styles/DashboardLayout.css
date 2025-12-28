@@ -39,15 +39,19 @@
 .dashBottomLeft {
     grid-column: 1;
     grid-row: 3;
+    height: 360px;
+    min-height: 360px;
 }
 
 .dashBottomRight {
     grid-column: 2;
     grid-row: 3;
+    height: 360px;
+    min-height: 360px;
 }
 
 .panel {
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 12px;
     padding: 14px;
     display: flex;
