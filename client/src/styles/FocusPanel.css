@@ -1,9 +1,21 @@
 .focusHero {
   width: 100%;
+  height: 100%;
+  /* NEW */
+  min-height: 280px;
+  /* optional */
   display: grid;
   gap: 14px;
   padding: 10px 8px;
+
+  place-items: center;
+  /* NEW: במקום justify-items + align-content */
+  place-content: center;
+  /* NEW */
 }
+
+
+
 
 .focusHeroHeader {
   display: grid;
@@ -13,11 +25,13 @@
 
 .focusHeroTitle {
   font-weight: 900;
-  font-size: 48px;
-  letter-spacing: 2px;
-  opacity: 0.85;
+  font-size: 34px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
 }
+
 
 .focusHeroMeta {
   font-size: 12px;
@@ -25,22 +39,29 @@
 }
 
 .focusTimer {
-  font-size: 72px;
+  font-size: 84px;
   font-weight: 900;
-  letter-spacing: 1px;
-  text-align: center;
-  line-height: 1.05;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--text);
+  margin: 0;
 }
+
 
 .focusTaskTitle {
   text-align: center;
-  font-size: 16px;
   opacity: 0.9;
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 70ch;
 }
 
 .focusTaskStrong {
   font-weight: 800;
   opacity: 1;
+  font-weight: 800;
+  color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 .focusActions {
@@ -54,5 +75,21 @@
   text-align: center;
   font-size: 13px;
   opacity: 0.8;
-  max-width: 56ch;
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+
+
+.focusTaskTitle .focusTaskStrong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.focusDivider {
+  height: 1px;
+  width: min(520px, 92%);
+  background: var(--accent-soft);
+  opacity: 0.8;
 }

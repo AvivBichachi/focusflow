@@ -22,6 +22,7 @@ export default function App() {
   const [focus, setFocus] = useState({ taskId: null, focusedAt: null });
   const [analyticsRefreshToken, setAnalyticsRefreshToken] = useState(0);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const heroActive = Boolean(focus?.taskId && focus?.focusedAt);
 
 
   const selectedTask = tasks.find((t) => t.id === selectedTaskId) || null;
@@ -231,14 +232,12 @@ export default function App() {
             </>
           }
           topRight={
-            <div className="panelBody">
+            <>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                 <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Tasks</h2>
-                <button className="btn"
-                  onClick={fetchTasks}>
-                  Refresh
-                </button>
+                <button className="btn" onClick={fetchTasks}>Refresh</button>
               </div>
+
               <div className="panelBody">
                 <TaskList
                   tasks={tasks}
@@ -248,9 +247,12 @@ export default function App() {
                   onOpenDetails={(taskId) => setSelectedTaskId(taskId)}
                 />
               </div>
-            </div>
+            </>
           }
+
+
           hero={<FocusPanel focus={focus} tasks={tasks} onStopFocus={stopFocus} />}
+          heroActive={heroActive}
           bottomLeft={
             <div className="panelBody">
               <DailyFocusStats refreshToken={analyticsRefreshToken} />

@@ -1,0 +1,24 @@
+.modalTitleValue {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.modalDescription {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  max-height: 220px;      /* ✅ הגדלה */
+  overflow-y: auto;       /* ✅ רק למטה */
+  overflow-x: hidden;     /* ✅ לא ימינה */
+
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+}

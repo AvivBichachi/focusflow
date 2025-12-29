@@ -22,11 +22,13 @@ export default function Modal({ open, title, onClose, children }) {
       <div
         style={{
           width: "min(720px, 100%)",
-          backgroundColor: "black",
+          backgroundColor: "var(--modal-bg)",
           borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.18)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+          border: "1px solid var(--border-strong)",
+          boxShadow: "var(--shadow)",
           overflow: "hidden",
+          color: "var(--text)",
+
 
           // ✅ NEW: make modal constrained + column layout
           maxHeight: "min(80vh, 720px)",
@@ -57,9 +59,8 @@ export default function Modal({ open, title, onClose, children }) {
         <div
           style={{
             padding: 14,
-
-            // ✅ NEW: this is the scroll area
             overflowY: "auto",
+            overflowX: "hidden",
             minHeight: 0, // חשוב ב-flex כדי ש-overflow יעבוד
           }}
         >

@@ -1,5 +1,6 @@
 import Modal from "./Modal.jsx";
 import { useEffect, useState } from "react";
+import '../styles/TaskDetailsModal.css'
 
 function formatDateTime(value) {
     if (!value) return "—";
@@ -41,7 +42,7 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                     <div>
                         <div style={{ opacity: 0.7, fontSize: 12 }}>Title</div>
                         {!isEditing ? (
-                            <div style={{ fontWeight: 700 }}>{task.title}</div>
+                            <div className="modalTitleValue" style={{ fontWeight: 700 }}>{task.title}</div>
                         ) : (
                             <input className="input"
                                 value={draftTitle}
@@ -90,9 +91,9 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                     <div>
                         <div style={{ opacity: 0.7, fontSize: 12 }}>Description</div>
                         {!isEditing ? (
-                            <div style={{ whiteSpace: "pre-wrap" }}>{task.description || "—"}</div>
+                            <div className="modalDescription" style={{ whiteSpace: "pre-wrap" }}>{task.description || "—"}</div>
                         ) : (
-                            <textarea className="textarea"
+                            <textarea className="textarea modalDescriptionInput"
                                 value={draftDescription}
                                 onChange={(e) => setDraftDescription(e.target.value)}
                                 rows={4}
@@ -111,7 +112,7 @@ export default function TaskDetailsModal({ open, task, onClose, onComplete, onDe
                             <div>{formatDateTime(task.updatedAt)}</div>
                         </div>
                     </div>
-                    <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+                    <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16, flexWrap: "wrap" }}>
                         {!isEditing ? (
                             <button className="btn btnPrimary"
                                 onClick={() => setIsEditing(true)}

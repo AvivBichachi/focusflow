@@ -29,10 +29,8 @@
 }
 
 .dashHero {
-    grid-column: 1 / span 2;
+    grid-column: 1 / -1;
     grid-row: 2;
-    display: grid;
-    align-items: center;
     min-height: 320px;
 }
 
@@ -51,25 +49,42 @@
 }
 
 .panel {
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;   /* תחזירי את זה */
+  min-height: 0;      /* חשוב לגלילה תקינה ב-flex */
 }
 
+
+
 .panelBody {
-  flex: 1;
-  min-height: 0;        /* קריטי כדי ש-scroll יעבוד בפנים */
-  overflow: auto;
+    flex: 1;
+    min-height: 0;
+    /* קריטי כדי ש-scroll יעבוד בפנים */
+    overflow: auto;
 }
 
 .heroPanel {
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    background: var(--panel-strong);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow);
     border-radius: 14px;
     padding: 18px;
+
+    /* NEW: hero content layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 @media (max-width: 900px) {
     .dash {
@@ -104,4 +119,52 @@
     .dashBottomRight {
         grid-row: 5;
     }
+}
+
+.heroPanel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background: radial-gradient(900px 320px at 50% 15%,
+            rgba(59, 130, 246, 0.10),
+            transparent 60%);
+
+    opacity: 1;
+}
+
+/* כשה-hero בפוקוס פעיל */
+.heroPanel.isActive::before {
+    background:
+        radial-gradient(900px 320px at 50% 15%, rgba(59, 130, 246, 0.18), transparent 60%),
+        linear-gradient(180deg, rgba(59, 130, 246, 0.10) 0%, transparent 70%);
+}
+
+.heroPanel.isActive {
+  border-color: rgba(59,130,246,0.45);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(59,130,246,0.08);
+}
+
+.heroPanel:not(.isActive)::before {
+  opacity: 0.6;
+}
+
+.heroPanel:not(.isActive) {
+  border-color: var(--border);
+}
+
+.focusHero.isActive .focusHeroMeta,
+.focusHero.isActive .focusTaskTitle {
+  opacity: 0.75;
+}
+
+.focusHero.isActive .focusTimer {
+  text-shadow: 0 0 24px rgba(59,130,246,0.25);
+}
+
+
+.heroPanel>* {
+    position: relative;
+    /* שהתוכן יהיה מעל הרקע */
 }
