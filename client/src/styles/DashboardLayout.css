@@ -51,7 +51,9 @@
 }
 
 .panel {
-    border: 1px solid rgb(255, 255, 255);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
     border-radius: 12px;
     padding: 14px;
     display: flex;
@@ -60,13 +62,16 @@
 }
 
 .panelBody {
-  flex: 1;
-  min-height: 0;        /* קריטי כדי ש-scroll יעבוד בפנים */
-  overflow: auto;
+    flex: 1;
+    min-height: 0;
+    /* קריטי כדי ש-scroll יעבוד בפנים */
+    overflow: auto;
 }
 
 .heroPanel {
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: var(--panel-strong);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow);
     border-radius: 14px;
     padding: 18px;
 }
