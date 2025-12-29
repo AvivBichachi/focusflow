@@ -141,6 +141,29 @@
         linear-gradient(180deg, rgba(59, 130, 246, 0.10) 0%, transparent 70%);
 }
 
+.heroPanel.isActive {
+  border-color: rgba(59,130,246,0.45);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(59,130,246,0.08);
+}
+
+.heroPanel:not(.isActive)::before {
+  opacity: 0.6;
+}
+
+.heroPanel:not(.isActive) {
+  border-color: var(--border);
+}
+
+.focusHero.isActive .focusHeroMeta,
+.focusHero.isActive .focusTaskTitle {
+  opacity: 0.75;
+}
+
+.focusHero.isActive .focusTimer {
+  text-shadow: 0 0 24px rgba(59,130,246,0.25);
+}
+
+
 .heroPanel>* {
     position: relative;
     /* שהתוכן יהיה מעל הרקע */
