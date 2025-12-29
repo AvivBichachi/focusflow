@@ -48,6 +48,7 @@ export default function FocusPanel({ focus, tasks, onStopFocus }) {
   return (
     <div className={`focusHero ${isActive ? "isActive" : "isIdle"}`}>
       <div className="focusHeroHeader">
+        <div className="focusDivider" />
         <div className="focusHeroTitle">Focus</div>
         <div className="focusHeroMeta">
           {isActive ? `Started: ${new Date(focus.focusedAt).toLocaleTimeString()}` : "No active session"}

@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <div className="dashTopLeft panel">{topLeft}</div>
       <div className="dashTopRight panel">{topRight}</div>
 
-      <div className="dashHero heroPanel">{hero}</div>
+      <div className={`dashHero heroPanel ${focus?.taskId ? "isActive" : ""}`}>{hero}</div>
 
       <div className="dashBottomLeft panel">{bottomLeft}</div>
       <div className="dashBottomRight panel">{bottomRight}</div>

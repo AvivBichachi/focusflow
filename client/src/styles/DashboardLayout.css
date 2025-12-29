@@ -34,6 +34,9 @@
     display: grid;
     align-items: center;
     min-height: 320px;
+    justify-items: stretch;
+    align-items: stretch;
+    /* במקום center */
 }
 
 .dashBottomLeft {
@@ -69,6 +72,9 @@
 }
 
 .heroPanel {
+    position: relative;
+    overflow: hidden;
+    /* חשוב בשביל border-radius */
     background: var(--panel-strong);
     border: 1px solid var(--border-strong);
     box-shadow: var(--shadow);
@@ -109,4 +115,31 @@
     .dashBottomRight {
         grid-row: 5;
     }
+}
+
+.heroPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+      900px 320px at 50% 15%,
+      rgba(59,130,246,0.10),
+      transparent 60%
+    );
+
+  opacity: 1;
+}
+
+/* כשה-hero בפוקוס פעיל */
+.heroPanel.isActive::before {
+  background:
+    radial-gradient(900px 320px at 50% 15%, rgba(59,130,246,0.18), transparent 60%),
+    linear-gradient(180deg, rgba(59,130,246,0.10) 0%, transparent 70%);
+}
+
+.heroPanel>* {
+    position: relative;
+    /* שהתוכן יהיה מעל הרקע */
 }
