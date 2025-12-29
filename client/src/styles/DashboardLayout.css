@@ -29,14 +29,9 @@
 }
 
 .dashHero {
-    grid-column: 1 / span 2;
+    grid-column: 1 / -1;
     grid-row: 2;
-    display: grid;
-    align-items: center;
     min-height: 320px;
-    justify-items: stretch;
-    align-items: stretch;
-    /* במקום center */
 }
 
 .dashBottomLeft {
@@ -54,15 +49,19 @@
 }
 
 .panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;   /* תחזירי את זה */
+  min-height: 0;      /* חשוב לגלילה תקינה ב-flex */
 }
+
+
 
 .panelBody {
     flex: 1;
@@ -74,13 +73,18 @@
 .heroPanel {
     position: relative;
     overflow: hidden;
-    /* חשוב בשביל border-radius */
     background: var(--panel-strong);
     border: 1px solid var(--border-strong);
     box-shadow: var(--shadow);
     border-radius: 14px;
     padding: 18px;
+
+    /* NEW: hero content layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 @media (max-width: 900px) {
     .dash {
@@ -118,25 +122,23 @@
 }
 
 .heroPanel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
 
-  background: radial-gradient(
-      900px 320px at 50% 15%,
-      rgba(59,130,246,0.10),
-      transparent 60%
-    );
+    background: radial-gradient(900px 320px at 50% 15%,
+            rgba(59, 130, 246, 0.10),
+            transparent 60%);
 
-  opacity: 1;
+    opacity: 1;
 }
 
 /* כשה-hero בפוקוס פעיל */
 .heroPanel.isActive::before {
-  background:
-    radial-gradient(900px 320px at 50% 15%, rgba(59,130,246,0.18), transparent 60%),
-    linear-gradient(180deg, rgba(59,130,246,0.10) 0%, transparent 70%);
+    background:
+        radial-gradient(900px 320px at 50% 15%, rgba(59, 130, 246, 0.18), transparent 60%),
+        linear-gradient(180deg, rgba(59, 130, 246, 0.10) 0%, transparent 70%);
 }
 
 .heroPanel>* {
