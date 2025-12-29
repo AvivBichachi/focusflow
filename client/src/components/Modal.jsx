@@ -57,9 +57,8 @@ export default function Modal({ open, title, onClose, children }) {
         <div
           style={{
             padding: 14,
-
-            // ✅ NEW: this is the scroll area
             overflowY: "auto",
+            overflowX: "hidden",
             minHeight: 0, // חשוב ב-flex כדי ש-overflow יעבוד
           }}
         >
