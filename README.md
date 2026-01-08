@@ -27,3 +27,11 @@ cd server
 npm install
 npm run dev
 ```
+
+### Environment variables
+
+Copy the example file and fill in your values:
+
+```bash
+cp server/.env.example server/.env
+```

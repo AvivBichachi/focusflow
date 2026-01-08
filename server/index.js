@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import authRoutes from "./src/routes/auth.routes.js";
 import tasksRoutes from "./src/routes/tasks.routes.js";
 import focusRoutes from "./src/routes/focus.routes.js";
 
@@ -12,6 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
 app.use("/api/tasks", tasksRoutes);
 app.use("/api/focus", focusRoutes);
 
