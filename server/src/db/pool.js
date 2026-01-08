@@ -1,21 +1,21 @@
 import { Pool } from "pg";
 
 const {
-  PGHOST = "localhost",
-  PGPORT = "5432",
-  PGDATABASE = "focusflow",
-  PGUSER = "focusflow",
-  PGPASSWORD,
+  DB_HOST,
+  DB_PORT,
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
 } = process.env;
 
-if (!PGPASSWORD) {
-  throw new Error("Missing PGPASSWORD for PostgreSQL connection");
+if (!DB_HOST || !DB_PORT || !DB_NAME || !DB_USER || !DB_PASSWORD) {
+  throw new Error("Missing required database environment variables");
 }
 
 export const pool = new Pool({
-  host: PGHOST,
-  port: Number(PGPORT),
-  database: PGDATABASE,
-  user: PGUSER,
-  password: PGPASSWORD,
+  host: DB_HOST,
+  port: Number(DB_PORT),
+  database: DB_NAME,
+  user: DB_USER,
+  password: DB_PASSWORD,
 });
