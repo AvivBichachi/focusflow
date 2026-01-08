@@ -8,21 +8,14 @@ import {
 
 export async function createTask(req, res) {
   const { title, description, priority, dueDate } = req.body;
+  const userId = req.user.id;
 
   if (!title || typeof title !== "string") {
-    return res.status(400).json({
-      error: "title is required and must be a string",
-    });
+    return res.status(400).json({ error: "title is required and must be a string" });
   }
 
   try {
-    const task = await createTaskService({
-      title,
-      description,
-      priority,
-      dueDate,
-    });
-
+    const task = await createTaskService(userId, { title, description, priority, dueDate });
     res.status(201).json(task);
   } catch (err) {
     console.error("Failed to create task", err);
@@ -30,10 +23,11 @@ export async function createTask(req, res) {
   }
 }
 
-
 export async function listTasks(req, res) {
+  const userId = req.user.id;
+
   try {
-    const tasks = await listTasksService();
+    const tasks = await listTasksService(userId);
     res.status(200).json({ items: tasks });
   } catch (err) {
     console.error("Failed to list tasks", err);
@@ -41,48 +35,37 @@ export async function listTasks(req, res) {
   }
 }
 
-
 export async function updateTask(req, res) {
   const { id } = req.params;
   const updates = req.body;
+  const userId = req.user.id;
 
   if (updates.status && updates.status === "COMPLETED") {
-    return res.status(400).json({
-      error: "Use the /complete endpoint to complete a task",
-    });
+    return res.status(400).json({ error: "Use the /complete endpoint to complete a task" });
   }
 
-  const updatedTask = await updateTaskById(id, updates);
-  if (!updatedTask) {
-    return res.status(404).json({ error: "Task not found" });
-  }
+  const updatedTask = await updateTaskById(userId, id, updates);
+  if (!updatedTask) return res.status(404).json({ error: "Task not found" });
 
   res.status(200).json(updatedTask);
 }
 
-
 export async function completeTask(req, res) {
   const { id } = req.params;
+  const userId = req.user.id;
 
-  const task = await completeTaskById(id);
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
-  }
+  const task = await completeTaskById(userId, id);
+  if (!task) return res.status(404).json({ error: "Task not found" });
 
   res.status(200).json(task);
 }
 
-
-
 export async function deleteTask(req, res) {
   const { id } = req.params;
+  const userId = req.user.id;
 
-  const deleted = await deleteTaskById(id);
-  if (!deleted) {
-    return res.status(404).json({ error: "Task not found" });
-  }
+  const deleted = await deleteTaskById(userId, id);
+  if (!deleted) return res.status(404).json({ error: "Task not found" });
 
   res.status(204).send();
 }
-
-

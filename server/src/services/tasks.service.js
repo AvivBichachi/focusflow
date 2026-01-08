@@ -1,16 +1,17 @@
 import { pool } from "../db/pool.js";
 
 
-const tasks = [];
+// Create a task owned by the authenticated user
 
-export async function createTask({ title, description, priority, dueDate }) {
+export async function createTask(userId, { title, description, priority, dueDate }) {
   const { rows } = await pool.query(
     `
-    INSERT INTO tasks (title, description, status, priority, due_date)
-    VALUES ($1, $2, 'TODO', $3, $4)
+    INSERT INTO tasks (user_id, title, description, status, priority, due_date)
+    VALUES ($1, $2, $3, 'TODO', $4, $5)
     RETURNING id, title, description, status, priority, due_date, created_at, updated_at
     `,
     [
+      userId,
       title,
       description ?? null,
       priority ?? "MEDIUM",
@@ -33,7 +34,9 @@ export async function createTask({ title, description, priority, dueDate }) {
 }
 
 
-export async function listTasks() {
+// List tasks for the authenticated user
+
+export async function listTasks(userId) {
   const { rows } = await pool.query(
     `
     SELECT
@@ -46,8 +49,10 @@ export async function listTasks() {
       created_at,
       updated_at
     FROM tasks
+    WHERE user_id = $1
     ORDER BY created_at DESC
-    `
+    `,
+    [userId]
   );
 
   return rows.map((r) => ({
@@ -63,7 +68,9 @@ export async function listTasks() {
 }
 
 
-export async function findTaskById(id) {
+// Find a specific task by id for the authenticated user
+
+export async function findTaskById(userId, id) {
   const { rows } = await pool.query(
     `
     SELECT
@@ -76,10 +83,10 @@ export async function findTaskById(id) {
       created_at,
       updated_at
     FROM tasks
-    WHERE id = $1
+    WHERE user_id = $1 AND id = $2
     LIMIT 1
     `,
-    [id]
+    [userId, id]
   );
 
   const t = rows[0];
@@ -98,7 +105,9 @@ export async function findTaskById(id) {
 }
 
 
-export async function updateTaskById(id, updates) {
+// Update a task by id for the authenticated user
+
+export async function updateTaskById(userId, id, updates) {
   const fields = [];
   const values = [];
   let idx = 1;
@@ -116,8 +125,9 @@ export async function updateTaskById(id, updates) {
     values.push(updates.priority);
   }
   if (updates.dueDate !== undefined) {
+    // keep consistent: store timestamptz; accept null to clear
     fields.push(`due_date = $${idx++}`);
-    values.push(updates.dueDate);
+    values.push(updates.dueDate ? new Date(updates.dueDate).toISOString() : null);
   }
   if (updates.status !== undefined) {
     fields.push(`status = $${idx++}`);
@@ -126,14 +136,18 @@ export async function updateTaskById(id, updates) {
 
   if (fields.length === 0) return null;
 
+  // Note: we append WHERE params at the end
+  const whereUserParam = idx++;
+  const whereIdParam = idx++;
+
   const { rows } = await pool.query(
     `
     UPDATE tasks
     SET ${fields.join(", ")}, updated_at = now()
-    WHERE id = $${idx}
+    WHERE user_id = $${whereUserParam} AND id = $${whereIdParam}
     RETURNING id, title, description, status, priority, due_date, created_at, updated_at
     `,
-    [...values, id]
+    [...values, userId, id]
   );
 
   const t = rows[0];
@@ -152,15 +166,17 @@ export async function updateTaskById(id, updates) {
 }
 
 
-export async function completeTaskById(id) {
+// Mark task as completed for the authenticated user
+
+export async function completeTaskById(userId, id) {
   const { rows } = await pool.query(
     `
     UPDATE tasks
     SET status = 'COMPLETED', updated_at = now()
-    WHERE id = $1
+    WHERE user_id = $1 AND id = $2
     RETURNING id, title, description, status, priority, due_date, created_at, updated_at
     `,
-    [id]
+    [userId, id]
   );
 
   const t = rows[0];
@@ -179,15 +195,16 @@ export async function completeTaskById(id) {
 }
 
 
-export async function deleteTaskById(id) {
+// Delete task by id for the authenticated user
+
+export async function deleteTaskById(userId, id) {
   const result = await pool.query(
     `
     DELETE FROM tasks
-    WHERE id = $1
+    WHERE user_id = $1 AND id = $2
     `,
-    [id]
+    [userId, id]
   );
 
   return result.rowCount > 0;
 }
-
