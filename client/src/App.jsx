@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
 import "./styles/App.css";
+import AuthPage from "./components/AuthPage.jsx";
+import { getToken, clearToken } from "./api/http";
+import {
+  listTasks,
+  createTask as createTaskApi,
+  deleteTask as deleteTaskApi,
+  updateTask as updateTaskApi,
+  completeTask as completeTaskApi,
+  getFocus,
+  startFocus as startFocusApi,
+  stopFocus as stopFocusApi,
+} from "./api/focusflow.api";
 import FocusPanel from "./components/FocusPanel.jsx";
 import TaskList from "./components/TaskList.jsx";
 import FocusHistory from "./components/FocusHistory";
@@ -13,7 +25,6 @@ import TaskDetailsModal from "./components/TaskDetailsModal.jsx";
 
 
 
-const API_BASE = "/api";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
@@ -23,7 +34,7 @@ export default function App() {
   const [analyticsRefreshToken, setAnalyticsRefreshToken] = useState(0);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const heroActive = Boolean(focus?.taskId && focus?.focusedAt);
-
+  const [authed, setAuthed] = useState(Boolean(getToken()));
 
   const selectedTask = tasks.find((t) => t.id === selectedTaskId) || null;
 
@@ -33,15 +44,24 @@ export default function App() {
     setAnalyticsRefreshToken((x) => x + 1);
   }
 
+  function onUnauthorized() {
+    clearToken();
+    setAuthed(false);
+  }
+
+
 
   async function fetchTasks() {
     setError("");
     try {
-      const res = await fetch(`${API_BASE}/tasks`);
-      if (!res.ok) throw new Error(`Failed to fetch tasks (${res.status})`);
-      const data = await res.json();
+      const data = await listTasks();
       setTasks(data.items ?? []);
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to fetch tasks");
     }
   }
@@ -51,84 +71,84 @@ export default function App() {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE}/tasks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const maybeJson = await res.json().catch(() => null);
-        const msg = maybeJson?.error ? `${maybeJson.error}` : `Failed to create task (${res.status})`;
-        throw new Error(msg);
-      }
-
+      await createTaskApi(payload);
       await fetchTasks();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to create task");
-      throw e; // חשוב כדי שה-TaskForm לא ינקה שדות במקרה כשל
+      throw e;
     } finally {
       setLoading(false);
     }
   }
 
 
+
   async function fetchFocus() {
     try {
-      const res = await fetch(`${API_BASE}/focus`);
-      if (!res.ok) throw new Error("Failed to fetch focus");
-      const data = await res.json();
+      const data = await getFocus();
       setFocus(data);
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to fetch focus");
     }
   }
 
+
   async function startFocus(taskId) {
     setError("");
     try {
-      const res = await fetch(`${API_BASE}/focus/start`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ taskId }),
-      });
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || "Failed to start focus");
-      }
-      const data = await res.json();
+      console.log("[startFocus] called with:", taskId);
+
+      const data = await startFocusApi(taskId);
+
+      console.log("[startFocus] api returned:", data);
       setFocus(data);
     } catch (e) {
-      setError(e.message || "Failed to start focus");
+      console.error("[startFocus] failed:", e);
+
+      if (e?.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
+      setError(e?.message || "Failed to start focus");
     }
   }
 
+
+
   async function stopFocus() {
     setError("");
+
     try {
-      const res = await fetch(`${API_BASE}/focus/stop`, { method: "POST" });
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || "Failed to stop focus");
-      }
+      await stopFocusApi();
       setFocus({ taskId: null, focusedAt: null });
       bumpAnalytics();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to stop focus");
     }
   }
 
+
   async function deleteTask(taskId) {
     setError("");
-    try {
-      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
-        method: "DELETE",
-      });
 
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || `Failed to delete task (${res.status})`);
-      }
+    try {
+      await deleteTaskApi(taskId);
 
       // If the deleted task is currently focused, clear focus in UI
       if (focus.taskId === taskId) {
@@ -137,66 +157,63 @@ export default function App() {
 
       await fetchTasks();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to delete task");
     }
-
   }
+
 
   async function updateTaskStatus(taskId, status) {
     setError("");
+
     try {
-      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
-
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || `Failed to update task (${res.status})`);
-      }
-
+      await updateTaskApi(taskId, { status });
       await fetchTasks();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to update task");
     }
   }
 
 
+
   async function completeTask(taskId) {
     setError("");
+
     try {
-      const res = await fetch(`${API_BASE}/tasks/${taskId}/complete`, {
-        method: "POST",
-      });
-
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || `Failed to complete task (${res.status})`);
-      }
-
+      await completeTaskApi(taskId);
       await fetchTasks();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to complete task");
     }
   }
 
+
   async function saveTaskEdits(taskId, updates) {
     setError("");
+
     try {
-      const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      });
-
-      if (!res.ok) {
-        const j = await res.json().catch(() => null);
-        throw new Error(j?.error || `Failed to update task (${res.status})`);
-      }
-
+      await updateTaskApi(taskId, updates);
       await fetchTasks();
     } catch (e) {
+      if (e.status === 401) {
+        clearToken();
+        setAuthed(false);
+        return;
+      }
       setError(e.message || "Failed to update task");
       throw e; // כדי שהמודל לא ייצא מ-edit אם נכשל
     }
@@ -206,14 +223,22 @@ export default function App() {
 
 
 
+
   useEffect(() => {
+    if (!authed) return;
     fetchTasks();
     fetchFocus();
-  }, []);
+  }, [authed]);
+
+
+
+  if (!authed) {
+    return <AuthPage onAuthed={() => setAuthed(true)} />;
+  }
 
   return (
     <div className="appShell">
-      <Header />
+      <Header onLogout={onUnauthorized} />
       <div className="appMain">
         <DashboardLayout
           topLeft={
@@ -255,12 +280,12 @@ export default function App() {
           heroActive={heroActive}
           bottomLeft={
             <div className="panelBody">
-              <DailyFocusStats refreshToken={analyticsRefreshToken} />
+              <DailyFocusStats refreshToken={analyticsRefreshToken} onUnauthorized={onUnauthorized} />
             </div>
           }
           bottomRight={
             <div className="panelBody">
-              <FocusHistory refreshToken={analyticsRefreshToken} />
+              <FocusHistory refreshToken={analyticsRefreshToken} onUnauthorized={onUnauthorized} />
             </div>
           }
         />

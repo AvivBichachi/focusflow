@@ -52,7 +52,8 @@ export default function TaskItem({ task, focusTaskId, onStartFocus, onUpdateStat
                     >
                         <button
                             className="btn btnPrimary"
-                            onClick={() => onStartFocus(task.id)}
+                            onClick={() => {console.log("FOCUS CLICK", task.id);
+                                onStartFocus(task.id)}}
                             disabled={!!focusTaskId}
                         >
                             Focus

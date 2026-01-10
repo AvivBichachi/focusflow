@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatHms } from "../utils/formatTime.js";
-
-
-const API_BASE = "/api";
-
+import { apiFetch } from "../api/http";
 
 function formatLocal(isoOrNull) {
   if (!isoOrNull) return "—";
@@ -12,7 +9,7 @@ function formatLocal(isoOrNull) {
   return d.toLocaleString();
 }
 
-export default function FocusHistory({ refreshToken }) {
+export default function FocusHistory({ refreshToken, onUnauthorized }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,12 +17,15 @@ export default function FocusHistory({ refreshToken }) {
   async function fetchSessions() {
     setLoading(true);
     setError("");
+
     try {
-      const res = await fetch(`${API_BASE}/focus/sessions?limit=20`);
-      if (!res.ok) throw new Error(`Failed to fetch focus sessions (${res.status})`);
-      const data = await res.json();
+      const data = await apiFetch("/api/focus/sessions?limit=20");
       setItems(data.items ?? []);
     } catch (e) {
+      if (e.status === 401) {
+        onUnauthorized?.();
+        return;
+      }
       setError(e.message || "Failed to fetch focus sessions");
     } finally {
       setLoading(false);
@@ -37,7 +37,7 @@ export default function FocusHistory({ refreshToken }) {
   }, [refreshToken]);
 
   return (
-    <div style={{ marginTop: 32, padding: 12}}>
+    <div style={{ marginTop: 32, padding: 12 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <h2 style={{ margin: 0 }}>Focus History</h2>
       </div>
