@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatHms } from "../utils/formatTime.js";
+import { apiFetch } from "../api/http";
 
-
-const API_BASE = "/api";
-
-export default function DailyFocusStats({ refreshToken }) {
+export default function DailyFocusStats({ refreshToken, onUnauthorized }) {
   const [days, setDays] = useState(7);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,17 +15,20 @@ export default function DailyFocusStats({ refreshToken }) {
   async function fetchDaily() {
     setLoading(true);
     setError("");
+
     try {
       const params = new URLSearchParams({
         days: String(days),
         tz,
       });
 
-      const res = await fetch(`${API_BASE}/focus/stats/daily?${params.toString()}`);
-      if (!res.ok) throw new Error(`Failed to fetch daily stats (${res.status})`);
-      const data = await res.json();
+      const data = await apiFetch(`/api/focus/stats/daily?${params.toString()}`);
       setItems(data.items ?? []);
     } catch (e) {
+      if (e.status === 401) {
+        onUnauthorized?.();
+        return;
+      }
       setError(e.message || "Failed to fetch daily stats");
     } finally {
       setLoading(false);
@@ -40,7 +41,7 @@ export default function DailyFocusStats({ refreshToken }) {
   }, [days, refreshToken]);
 
   return (
-    <div style={{ marginTop: 32, padding: 12}}>
+    <div style={{ marginTop: 32, padding: 12 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <h2 style={{ margin: 0 }}>Daily Focus Stats</h2>
 

@@ -44,6 +44,12 @@ export default function App() {
     setAnalyticsRefreshToken((x) => x + 1);
   }
 
+  function onUnauthorized() {
+    clearToken();
+    setAuthed(false);
+  }
+
+
 
   async function fetchTasks() {
     setError("");
@@ -226,7 +232,7 @@ export default function App() {
 
   return (
     <div className="appShell">
-      <Header />
+      <Header onLogout={onUnauthorized} />
       <div className="appMain">
         <DashboardLayout
           topLeft={
@@ -268,12 +274,12 @@ export default function App() {
           heroActive={heroActive}
           bottomLeft={
             <div className="panelBody">
-              <DailyFocusStats refreshToken={analyticsRefreshToken} />
+              <DailyFocusStats refreshToken={analyticsRefreshToken} onUnauthorized={onUnauthorized} />
             </div>
           }
           bottomRight={
             <div className="panelBody">
-              <FocusHistory refreshToken={analyticsRefreshToken} />
+              <FocusHistory refreshToken={analyticsRefreshToken} onUnauthorized={onUnauthorized} />
             </div>
           }
         />
