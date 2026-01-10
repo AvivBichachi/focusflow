@@ -105,19 +105,25 @@ export default function App() {
 
   async function startFocus(taskId) {
     setError("");
-
     try {
+      console.log("[startFocus] called with:", taskId);
+
       const data = await startFocusApi(taskId);
+
+      console.log("[startFocus] api returned:", data);
       setFocus(data);
     } catch (e) {
-      if (e.status === 401) {
+      console.error("[startFocus] failed:", e);
+
+      if (e?.status === 401) {
         clearToken();
         setAuthed(false);
         return;
       }
-      setError(e.message || "Failed to start focus");
+      setError(e?.message || "Failed to start focus");
     }
   }
+
 
 
   async function stopFocus() {

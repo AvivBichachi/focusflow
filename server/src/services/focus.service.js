@@ -1,14 +1,15 @@
 import { pool } from "../db/pool.js";
 
-export async function getCurrentFocus() {
+export async function getCurrentFocus(userId) {
   const { rows } = await pool.query(
     `
     SELECT id, task_id, started_at
     FROM focus_sessions
-    WHERE ended_at IS NULL
+    WHERE user_id = $1 AND ended_at IS NULL
     ORDER BY started_at DESC
     LIMIT 1
-    `
+    `,
+    [userId]
   );
 
   const s = rows[0];
@@ -21,9 +22,9 @@ export async function getCurrentFocus() {
   };
 }
 
-export async function startFocus(taskId) {
-  // Check if already active (fast path)
-  const existing = await getCurrentFocus();
+export async function startFocus(userId, taskId) {
+  // fast path: check existing active session for this user
+  const existing = await getCurrentFocus(userId);
   if (existing.taskId) {
     return { ok: false, error: "FOCUS_ALREADY_ACTIVE" };
   }
@@ -31,11 +32,11 @@ export async function startFocus(taskId) {
   try {
     const { rows } = await pool.query(
       `
-      INSERT INTO focus_sessions (task_id)
-      VALUES ($1)
+      INSERT INTO focus_sessions (user_id, task_id)
+      VALUES ($1, $2)
       RETURNING id, task_id, started_at
       `,
-      [taskId]
+      [userId, taskId]
     );
 
     const s = rows[0];
@@ -48,7 +49,7 @@ export async function startFocus(taskId) {
       },
     };
   } catch (err) {
-    // Unique index will throw if a session is already active (race-safe)
+    // unique index (user_id) WHERE ended_at IS NULL
     if (err?.code === "23505") {
       return { ok: false, error: "FOCUS_ALREADY_ACTIVE" };
     }
@@ -56,14 +57,15 @@ export async function startFocus(taskId) {
   }
 }
 
-export async function stopFocus() {
+export async function stopFocus(userId) {
   const { rows } = await pool.query(
     `
     UPDATE focus_sessions
     SET ended_at = now()
-    WHERE ended_at IS NULL
+    WHERE user_id = $1 AND ended_at IS NULL
     RETURNING id
-    `
+    `,
+    [userId]
   );
 
   if (rows.length === 0) {
