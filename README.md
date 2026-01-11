@@ -95,6 +95,14 @@ npm run dev
 Frontend runs on:
 http://localhost:5173
 
+## Notes
+
+- The application is deployed on Render using the free tier.
+- The service may enter sleep mode after ~15 minutes of inactivity.
+- The first request after sleep may take a few seconds to respond (cold start).
+- This does **not** trigger a rebuild or consume pipeline minutes.
+
+
 ## Deployment
 
 The application is deployed on Render as a single web service.
