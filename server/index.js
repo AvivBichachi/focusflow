@@ -26,16 +26,13 @@ app.get("/health", (req, res) => {
 // Serve React build (client/dist)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// server/index.js -> repoRoot/server/index.js -> repoRoot is one level up
 const clientDistPath = path.resolve(__dirname, "../client/dist");
 
 app.use(express.static(clientDistPath));
 
-// SPA fallback: any non-API route returns React index.html
-app.get("*", (req, res) => {
-  // avoid interfering with /api if someone misroutes
-  if (req.path.startsWith("/api/")) return res.status(404).json({ error: "Not found" });
+// SPA fallback (React Router):
+// Match any route that DOES NOT start with /api
+app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(clientDistPath, "index.html"));
 });
 
