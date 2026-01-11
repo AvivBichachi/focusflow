@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import { initDb } from "./src/db/initDb.js";
+
 
 import authRoutes from "./src/routes/auth.routes.js";
 import tasksRoutes from "./src/routes/tasks.routes.js";
@@ -36,7 +38,11 @@ app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(clientDistPath, "index.html"));
 });
 
+
 const PORT = process.env.PORT || 4000;
+
+await initDb();
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
