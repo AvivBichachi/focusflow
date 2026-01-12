@@ -25,6 +25,23 @@ https://focusflow-dkg1.onrender.com
 - Focus history and daily focus statistics
 - Secure, user-scoped data access
 
+## Screenshots
+
+### Authentication
+![Login](screenshots/login.png)
+
+### Dashboard & Tasks
+![Dashboard](screenshots/dashboard.png)
+
+### Focus Session
+![Focus Session](screenshots/focus-session.png)
+
+### Analytics & History
+![Analytics](screenshots/analytics.png)
+
+### Task Management
+![Task Details](screenshots/modal.png)
+
 ## Domain Entities
 
 User:
